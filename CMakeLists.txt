@@ -1,50 +1,83 @@
-cmake_minimum_required(VERSION 2.8.3)
-project(romea_localisation_rtls)
+cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -std=c++17")
+project(
+  "romea_localisation_rtls"
+  VERSION 0.1.0
+  #  DESCRIPTION
+  #  HOMEPAGE_URL
+  LANGUAGES CXX)
 
-#######################
-## Find dependencies ##
-#######################
-set(${PROJECT_NAME}_CATKIN_DEPS
-  romea_rtls
-  romea_localisation)
+find_package(romea_common REQUIRED)
+find_package(romea_rtls REQUIRED)
+find_package(romea_localisation)
 
-find_package(romea_filtering REQUIRED)
-find_package( PkgConfig )
-pkg_check_modules( EIGEN3 REQUIRED eigen3 )
-
-
-find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_DEPS})
-
-###################################
-## catkin specific configuration ##
-###################################
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS ${${PROJECT_NAME}_CATKIN_DEPS})
-
-###########
-## Build ##
-###########
-include_directories(
-  include
-  /usr/include/eigen3
-  SYSTEM ${catkin_INCLUDE_DIRS}
-#    SYSTEM ${EIGEN3_INCLUDE_DIRS},
-  SYSTEM ${romea_filtering_INCLUDE_DIRS})
-
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
   src/rtls_localisation_plugin_diagnostics.cpp
   src/rtls_localisation_simple_trilateration.cpp
   src/rtls_localisation_transceivers.cpp
   src/rtls_localisation_ranges.cpp
   src/rtls_localisation_position_estimator.cpp
-  src/rtls_localisation_pose_estimator.cpp)
+  src/rtls_localisation_pose_estimator.cpp
+  )
 
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-if(CATKIN_ENABLE_TESTING)
-  add_subdirectory(test)
-endif(CATKIN_ENABLE_TESTING)
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+  ${romea_rtls_INCLUDE_DIRS}
+  ${romea_localisation_INCLUDE_DIRS}
+  )
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+  -Wall -Wextra -O3 -std=c++17)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  romea_rtls::romea_rtls
+  romea_localisation::romea_localisation)
+
+include(GNUInstallDirs)
+
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}Targets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES package.xml DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion)
+
+configure_package_config_file(
+  "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in"
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" INSTALL_DESTINATION
+  ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
+
+install(
+  EXPORT ${PROJECT_NAME}Targets
+  FILE ${PROJECT_NAME}Targets.cmake
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
+
+install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
+
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+
+
+#include_directories(include  ${EIGEN3_INCLUDE_DIRS})
+
+#option(BUILD_TESTS "BUILD WITH TESTS" OFF)
+#if(BUILD_TESTS)
+#  enable_testing()
+#  add_subdirectory(test)
+#endif(BUILD_TESTS)
