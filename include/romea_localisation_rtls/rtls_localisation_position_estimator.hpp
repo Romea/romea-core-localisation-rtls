@@ -1,13 +1,10 @@
-#ifndef _romea_R2HPositionEstimator2_hpp
-#define _romea_R2HPositionEstimator2_hpp
+#ifndef _romea_R2HPositionEstimator_hpp
+#define _romea_R2HPositionEstimator_hpp
 
 //romea
 #include <romea_common/regression/leastsquares/NLSE.hpp>
 #include <romea_common/containers/Eigen/VectorOfEigenVector.hpp>
 #include "rtls_localisation_ranges.hpp"
-
-//boost
-#include <boost/optional.hpp>
 
 namespace romea
 {

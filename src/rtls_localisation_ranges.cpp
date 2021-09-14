@@ -27,13 +27,13 @@ RTLSLocalisationRange::RTLSLocalisationRange(const int & initiatorId,
 //-----------------------------------------------------------------------------
 const RTLSRange & RTLSLocalisationRange::get()const
 {
-  return range_.get();
+  return range_.value();
 }
 
 //-----------------------------------------------------------------------------
 bool RTLSLocalisationRange::isAvailable()const
 {
-  return range_.is_initialized();
+  return range_.has_value();
 }
 
 //-----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ void RTLSLocalisationRange::reset()
 //-----------------------------------------------------------------------------
 double RTLSLocalisationRange::computeUnbiasedRange3D()const
 {
-  assert(range_.is_initialized());
+  assert(range_.has_value());
   assert(range_->range-bias_>0);
   return range_->range-bias_;
 }
@@ -68,7 +68,7 @@ double  RTLSLocalisationRange::computeUnbiasedRange2D()const
 void RTLSLocalisationRange::log()const
 {
   assert(logFile_.is_open());
-  if(range_.is_initialized())
+  if(range_.has_value())
   {
     logFile_ << range_->duration.count() << " ";
     logFile_ << range_->range << " ";

@@ -1,8 +1,6 @@
 #ifndef __RTLSLocalisationRangeInfo_HPP__
 #define __RTLSLocalisationRangeInfo_HPP__
 
-//boost
-#include <boost/optional.hpp>
 
 //romea
 #include <romea_rtls/RTLSRange.hpp>
@@ -12,6 +10,7 @@
 #include <Eigen/Core>
 
 //std
+#include <optional>
 #include <fstream>
 #include <vector>
 
@@ -46,7 +45,7 @@ public :
 
 private :
 
-  boost::optional<RTLSRange> range_;
+  std::optional<RTLSRange> range_;
 
   double bias_;
   double zOffset_;
