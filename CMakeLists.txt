@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(
-  "romea_localisation_rtls"
+  "romea_core_localisation_rtls"
   VERSION 0.1.0
   #  DESCRIPTION
   #  HOMEPAGE_URL
   LANGUAGES CXX)
 
-find_package(romea_common REQUIRED)
-find_package(romea_rtls REQUIRED)
-find_package(romea_localisation)
+find_package(romea_core_common REQUIRED)
+find_package(romea_core_rtls REQUIRED)
+find_package(romea_core_localisation)
 
 add_library(${PROJECT_NAME} SHARED
   src/rtls_localisation_plugin_diagnostics.cpp
@@ -33,8 +33,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   -Wall -Wextra -O3 -std=c++17)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-  romea_rtls::romea_rtls
-  romea_localisation::romea_localisation)
+  romea_core_rtls::romea_core_rtls
+  romea_core_localisation::romea_core_localisation)
 
 include(GNUInstallDirs)
 

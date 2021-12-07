@@ -1,7 +1,7 @@
 #ifndef __RTLSLocalisationSimpleTrilateration_HPP__
 #define __RTLSLocalisationSimpleTrilateration_HPP__
 
-#include <romea_common/containers/Eigen/VectorOfEigenVector.hpp>
+#include <romea_core_common/containers/Eigen/VectorOfEigenVector.hpp>
 
 namespace romea {
 

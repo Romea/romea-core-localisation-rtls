@@ -6,9 +6,9 @@
 #include <memory>
 
 //romea
-#include <romea_common/monitoring/OnlineAverage.hpp>
-#include <romea_common/monitoring/RateMonitoring.hpp>
-#include <romea_common/diagnostic/CheckupReliability.hpp>
+#include <romea_core_common/monitoring/OnlineAverage.hpp>
+#include <romea_core_common/monitoring/RateMonitoring.hpp>
+#include <romea_core_common/diagnostic/CheckupReliability.hpp>
 
 namespace romea {
 

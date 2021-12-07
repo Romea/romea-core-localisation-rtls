@@ -1,4 +1,4 @@
-#include "romea_localisation_rtls/rtls_localisation_plugin_diagnostics.hpp"
+#include "romea_core_localisation_rtls/rtls_localisation_plugin_diagnostics.hpp"
 
 namespace {
 const double DEFAULT_LOW_RELIABILITY_THRESHOLD=0.3;

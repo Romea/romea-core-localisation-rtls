@@ -3,8 +3,8 @@
 
 
 //romea
-#include <romea_rtls/RTLSRange.hpp>
-#include <romea_common/pointset/PointSet.hpp>
+#include <romea_core_rtls/RTLSRange.hpp>
+#include <romea_core_common/pointset/PointSet.hpp>
 
 //Eigen
 #include <Eigen/Core>

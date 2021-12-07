@@ -2,8 +2,8 @@
 #define _romea_R2HPositionEstimator_hpp
 
 //romea
-#include <romea_common/regression/leastsquares/NLSE.hpp>
-#include <romea_common/containers/Eigen/VectorOfEigenVector.hpp>
+#include <romea_core_common/regression/leastsquares/NLSE.hpp>
+#include <romea_core_common/containers/Eigen/VectorOfEigenVector.hpp>
 #include "rtls_localisation_ranges.hpp"
 
 namespace romea

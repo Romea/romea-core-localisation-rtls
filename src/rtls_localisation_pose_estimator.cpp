@@ -1,9 +1,9 @@
-#include "romea_localisation_rtls/rtls_localisation_pose_estimator.hpp"
-#include "romea_localisation_rtls/rtls_localisation_simple_trilateration.hpp"
-#include "romea_localisation_rtls/rtls_localisation_ranges.hpp"
+#include "romea_core_localisation_rtls/rtls_localisation_pose_estimator.hpp"
+#include "romea_core_localisation_rtls/rtls_localisation_simple_trilateration.hpp"
+#include "romea_core_localisation_rtls/rtls_localisation_ranges.hpp"
 
-#include <romea_common/transform/estimation/FindRigidTransformationBySVD.hpp>
-#include <romea_common/math/EulerAngles.hpp>
+#include <romea_core_common/transform/estimation/FindRigidTransformationBySVD.hpp>
+#include <romea_core_common/math/EulerAngles.hpp>
 #include <iostream>
 
 namespace

@@ -11,6 +11,6 @@
   <export>
     <build_type>cmake</build_type>
   </export>
-  <depend>romea_rtls</depend>
-  <depend>romea_localisation</depend>
+  <depend>romea_core_rtls</depend>
+  <depend>romea_core_localisation</depend>
 </package>
