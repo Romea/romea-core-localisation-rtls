@@ -25,8 +25,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
-  ${romea_rtls_INCLUDE_DIRS}
-  ${romea_localisation_INCLUDE_DIRS}
+  ${romea_core_rtls_INCLUDE_DIRS}
+  ${romea_core_localisation_INCLUDE_DIRS}
   )
 
 target_compile_options(${PROJECT_NAME} PRIVATE
