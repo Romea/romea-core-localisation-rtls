@@ -1,6 +1,10 @@
-#ifndef __RTLSLocalisationSimpleTrilateration_HPP__
-#define __RTLSLocalisationSimpleTrilateration_HPP__
+#ifndef ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_SIMPLE_TRILATERATION_HPP_
+#define ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_SIMPLE_TRILATERATION_HPP_
 
+// std
+#include <vector>
+
+// romea
 #include <romea_core_common/containers/Eigen/VectorOfEigenVector.hpp>
 
 namespace romea {
@@ -35,8 +39,8 @@ private :
                                         const Eigen::Vector2d & p2,
                                         const double & r1,
                                         const double & r2);
-
 };
 
-}
-#endif
+}  // namespace romea
+
+#endif  // ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_SIMPLE_TRILATERATION_HPP_

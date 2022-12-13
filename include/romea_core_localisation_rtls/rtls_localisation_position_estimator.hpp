@@ -1,24 +1,25 @@
-#ifndef _romea_R2HPositionEstimator_hpp
-#define _romea_R2HPositionEstimator_hpp
+#ifndef ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_POSITION_ESTIMATOR_HPP_ 
+#define ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_POSITION_ESTIMATOR_HPP_ 
 
-//romea
+// std
+#include <vector>
+
+// romea
 #include <romea_core_common/regression/leastsquares/NLSE.hpp>
 #include <romea_core_common/containers/Eigen/VectorOfEigenVector.hpp>
-#include "rtls_localisation_ranges.hpp"
+#include "romea_core_localisation_rtls/rtls_localisation_ranges.hpp"
 
 namespace romea
 {
 
 class RTLSLocalisationPositionEstimator : public NLSE<double>
 {
-
 public:
-
   RTLSLocalisationPositionEstimator();
 
-  RTLSLocalisationPositionEstimator(const double & estimateEpsilon);
+  explicit RTLSLocalisationPositionEstimator(const double & estimateEpsilon);
 
-  virtual ~RTLSLocalisationPositionEstimator()=default;
+  virtual ~RTLSLocalisationPositionEstimator() = default;
 
 public :
 
@@ -37,11 +38,10 @@ private :
   VectorOfEigenVector2d referenceTagPositions_;
   std::vector<size_t> indexesOfAvailableRanges_;
   std::vector<double> ranges_;
-
 };
 
-}
+}  // namespace romea
 
-#endif
+#endif  // ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_POSITION_ESTIMATOR_HPP_ 
 
 

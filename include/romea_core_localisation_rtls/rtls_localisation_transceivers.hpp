@@ -1,10 +1,11 @@
-#ifndef __RTLSLocalisationTransceivers_HPP__
-#define __RTLSLocalisationTransceivers_HPP__
+#ifndef ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_TRANSCEIVERS_HPP_ 
+#define ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_TRANSCEIVERS_HPP_ 
 
-//std
+// std
 #include <vector>
+#include <string>
 
-//romea
+// romea
 #include <romea_core_common/pointset/PointSet.hpp>
 
 namespace romea
@@ -20,7 +21,6 @@ struct RTLSLocalisationTransceivers
   std::vector<int> ids;
 };
 
-}
+}  // namespace romea
 
-
-#endif
+#endif  // ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_TRANSCEIVERS_HPP_ 

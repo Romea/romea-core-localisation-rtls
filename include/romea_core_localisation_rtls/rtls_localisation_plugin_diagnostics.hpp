@@ -1,11 +1,12 @@
-#ifndef __RTLSLocalisationMasterDiagnostics_HPP__
-#define __RTLSLocalisationMasterDiagnostics_HPP__
+#ifndef ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_PLUGIN_DIAGNOSTICS_HPP_  
+#define ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_PLUGIN_DIAGNOSTICS_HPP_  
 
-//std
+// std
 #include <atomic>
 #include <memory>
+#include <vector>
 
-//romea
+// romea
 #include <romea_core_common/monitoring/OnlineAverage.hpp>
 #include <romea_core_common/monitoring/RateMonitoring.hpp>
 #include <romea_core_common/diagnostic/CheckupReliability.hpp>
@@ -14,9 +15,7 @@ namespace romea {
 
 class RTLSLocalisationPluginDiagnostics
 {
-
 public:
-
   RTLSLocalisationPluginDiagnostics();
 
 public :
@@ -40,8 +39,8 @@ private :
   std::vector<std::unique_ptr<CheckupReliability> > responder_reliability_diagnostics_;
   std::vector<std::unique_ptr<OnlineAverage> > initiator_reliability_monitorings_;
   std::vector<std::unique_ptr<CheckupReliability> > initiator_reliability_diagnostics_;
-
 };
 
-}
-#endif
+}  // namespace romea
+
+#endif  // ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_PLUGIN_DIAGNOSTICS_HPP_  

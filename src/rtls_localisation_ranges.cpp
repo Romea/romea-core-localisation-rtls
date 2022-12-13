@@ -39,7 +39,7 @@ bool RTLSLocalisationRange::isAvailable()const
 //-----------------------------------------------------------------------------
 void RTLSLocalisationRange::set(const RTLSRange & range)
 {
-  range_=range;
+  range_ = range;
 }
 
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ void RTLSLocalisationRange::reset()
 double RTLSLocalisationRange::computeUnbiasedRange3D()const
 {
   assert(range_.has_value());
-  assert(range_->range-bias_>0);
+  assert(range_->range-bias_ > 0);
   return range_->range-bias_;
 }
 
@@ -60,7 +60,7 @@ double RTLSLocalisationRange::computeUnbiasedRange3D()const
 double  RTLSLocalisationRange::computeUnbiasedRange2D()const
 {
   double range = computeUnbiasedRange3D();
-  assert(range*range-squareZOffset_>0);
+  assert(range*range-squareZOffset_ > 0);
   return std::sqrt((range*range)-squareZOffset_);
 }
 
@@ -68,7 +68,7 @@ double  RTLSLocalisationRange::computeUnbiasedRange2D()const
 void RTLSLocalisationRange::log()const
 {
   assert(logFile_.is_open());
-  if(range_.has_value())
+  if (range_.has_value())
   {
     logFile_ << range_->duration.count() << " ";
     logFile_ << range_->range << " ";
@@ -77,6 +77,4 @@ void RTLSLocalisationRange::log()const
   }
 }
 
-
-
-}
+}  // namespace romea

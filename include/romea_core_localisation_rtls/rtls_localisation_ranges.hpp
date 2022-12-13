@@ -1,25 +1,26 @@
-#ifndef __RTLSLocalisationRangeInfo_HPP__
-#define __RTLSLocalisationRangeInfo_HPP__
+#ifndef ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_RANGES_HPP_ 
+#define ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_RANGES_HPP_ 
 
-
-//romea
-#include <romea_core_rtls/RTLSRange.hpp>
-#include <romea_core_common/pointset/PointSet.hpp>
-
-//Eigen
-#include <Eigen/Core>
 
 //std
 #include <optional>
 #include <fstream>
 #include <vector>
 
+//Eigen
+#include <Eigen/Core>
+
+//romea
+#include <romea_core_rtls/RTLSRange.hpp>
+#include <romea_core_common/pointset/PointSet.hpp>
+
 namespace romea
 {
 
+
+// TODO(jean) change _name
 class RTLSLocalisationRange
 {
-
 public :
 
   RTLSLocalisationRange(const int & initiatorId,
@@ -58,5 +59,6 @@ private :
 using RTLSLocalisationRangeVector = std::vector<RTLSLocalisationRange>;
 using RTLSLocalisationRangeArray = std::vector<RTLSLocalisationRangeVector>;
 
-}
-#endif
+}  // namespace romea
+
+#endif  // ROMEA_CORE_LOCALISATION_RTLS_RTLS_LOCALISATION_RANGES_HPP_

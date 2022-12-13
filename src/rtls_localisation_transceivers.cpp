@@ -9,7 +9,6 @@ RTLSLocalisationTransceivers::RTLSLocalisationTransceivers():
   positions(),
   ids()
 {
-
 }
 
-}
+}  // namespace romea

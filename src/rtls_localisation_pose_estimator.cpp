@@ -4,14 +4,13 @@
 
 #include <romea_core_common/transform/estimation/FindRigidTransformationBySVD.hpp>
 #include <romea_core_common/math/EulerAngles.hpp>
-#include <iostream>
 
 namespace
 {
 const size_t MINIMAL_NUMBER_OF_TAGS_ON_TARGET_ENTITY = 2;
-const size_t MINIMAL_NUMBER_OF_TAGS_ON_REFERENCE_ENTITY =3;
-const size_t MINIMAL_NUMBER_OF_RANGES_TO_COMPUTE_POSITION =3;
-const size_t MINIMAL_NUMBER_OF_RANGES_FROM_EACH_TAG_TO_COMPUTE_POSE=2;
+const size_t MINIMAL_NUMBER_OF_TAGS_ON_REFERENCE_ENTITY  = 3;
+const size_t MINIMAL_NUMBER_OF_RANGES_TO_COMPUTE_POSITION  = 3;
+const size_t MINIMAL_NUMBER_OF_RANGES_FROM_EACH_TAG_TO_COMPUTE_POSE = 2;
 }
 
 namespace romea {
@@ -21,7 +20,7 @@ RTLSLocalisationPoseEstimator::RTLSLocalisationPoseEstimator():
   NLSE()
 {
   estimate_.resize(3);
-  estimateCovariance_.resize(3,3);
+  estimateCovariance_.resize(3, 3);
   leastSquares_.setEstimateSize(3);
 }
 
@@ -30,27 +29,31 @@ RTLSLocalisationPoseEstimator::RTLSLocalisationPoseEstimator(const double &estim
   NLSE(estimateEpsilon)
 {
   estimate_.resize(3);
-  estimateCovariance_.resize(3,3);
+  estimateCovariance_.resize(3,  3);
   leastSquares_.setEstimateSize(3);
 }
 
 //-----------------------------------------------------------------------------
-void RTLSLocalisationPoseEstimator::loadGeometry(const VectorOfEigenVector3d & targetTagPositions,
-                                                 const VectorOfEigenVector3d & referenceTagPositions)
+void RTLSLocalisationPoseEstimator::
+loadGeometry(const VectorOfEigenVector3d & targetTagPositions,
+             const VectorOfEigenVector3d & referenceTagPositions)
 {
-  ranges_.resize(targetTagPositions.size(),std::vector<double>(referenceTagPositions.size()));
-  indexesOfAvailableRanges_.resize(targetTagPositions.size(),std::vector<size_t>(referenceTagPositions.size()));
+  ranges_.resize(targetTagPositions.size(),
+                 std::vector<double>(referenceTagPositions.size()));
+
+  indexesOfAvailableRanges_.resize(targetTagPositions.size(),
+                                   std::vector<size_t>(referenceTagPositions.size()));
 
   targetTagPositions_.resize(targetTagPositions.size());
-  for(size_t i=0; i < targetTagPositions.size(); ++i)
+  for (size_t i=0; i < targetTagPositions.size(); ++i)
   {
     targetTagPositions_[i]= targetTagPositions[i].head<2>();
   }
 
-  referenceTagPositions_.resize( referenceTagPositions.size());
-  for(size_t j=0; j <  referenceTagPositions.size(); ++j)
+  referenceTagPositions_.resize(referenceTagPositions.size());
+  for (size_t j=0; j <  referenceTagPositions.size(); ++j)
   {
-    referenceTagPositions_[j]=referenceTagPositions[j].head<2>();
+    referenceTagPositions_[j] = referenceTagPositions[j].head<2>();
   }
 }
 
@@ -62,30 +65,29 @@ bool RTLSLocalisationPoseEstimator::initR2R(const RTLSLocalisationRangeArray &ra
   const size_t numberOfReferenceTags = referenceTagPositions_.size();
   const size_t numberOfTargetTags = targetTagPositions_.size();
 
-  assert(ranges.size()==numberOfTargetTags);
-  assert(ranges[0].size()==numberOfReferenceTags);
+  assert(ranges.size() == numberOfTargetTags);
+  assert(ranges[0].size() == numberOfReferenceTags);
 
-  size_t n=0;
-  for( size_t i = 0 ; i< numberOfTargetTags; i++)
+  size_t n = 0;
+  for ( size_t i = 0 ; i < numberOfTargetTags; i++)
   {
     indexesOfAvailableRanges_[i].clear();
-    for( size_t j = 0 ; j< numberOfReferenceTags; j++)
+    for ( size_t j = 0 ; j < numberOfReferenceTags; j++)
     {
       auto & range  = ranges[i][j];
-      if(range.isAvailable())
+      if (range.isAvailable())
       {
         indexesOfAvailableRanges_[i].push_back(j);
-        ranges_[i][j]=range.computeUnbiasedRange2D();
+        ranges_[i][j] = range.computeUnbiasedRange2D();
         n++;
       }
     }
 
-    if(indexesOfAvailableRanges_[i].size()!=ranges_[i].size() &&
-       indexesOfAvailableRanges_[i].size()<MINIMAL_NUMBER_OF_RANGES_TO_COMPUTE_POSITION)
+    if (indexesOfAvailableRanges_[i].size() != ranges_[i].size() &&
+        indexesOfAvailableRanges_[i].size() < MINIMAL_NUMBER_OF_RANGES_TO_COMPUTE_POSITION)
     {
       return false;
     }
-
   }
 
   leastSquares_.setDataSize(n);
@@ -99,27 +101,26 @@ bool RTLSLocalisationPoseEstimator::initR2W(const RTLSLocalisationRangeArray &ra
   const size_t numberOfReferenceTags = referenceTagPositions_.size();
   const size_t numberOfTargetTags = targetTagPositions_.size();
 
-  assert(ranges.size()==numberOfReferenceTags);
-  assert(ranges[0].size()==numberOfTargetTags);
+  assert(ranges.size() == numberOfReferenceTags);
+  assert(ranges[0].size() == numberOfTargetTags);
 
-  size_t n=0;
-  for( size_t i = 0 ; i< numberOfTargetTags; i++)
+  size_t n = 0;
+  for (size_t i = 0 ; i< numberOfTargetTags; i++)
   {
     indexesOfAvailableRanges_[i].clear();
-    for( size_t j = 0 ; j< referenceTagIndexes.size(); j++)
+    for (size_t j = 0 ; j< referenceTagIndexes.size(); j++)
     {
       auto & range  = ranges[referenceTagIndexes[j]][i];
-      if(range.isAvailable())
+      if (range.isAvailable())
       {
         indexesOfAvailableRanges_[i].push_back(j);
-        ranges_[i][j]=range.computeUnbiasedRange2D();
+        ranges_[i][j] = range.computeUnbiasedRange2D();
         n++;
       }
     }
 
-//    std::cout << " indexesOfAvailableRanges_[" <<i <<"].size() "<<indexesOfAvailableRanges_[i].size()<<std::endl;
-    if(indexesOfAvailableRanges_[i].size()!=ranges_[i].size() &&
-       indexesOfAvailableRanges_[i].size()<MINIMAL_NUMBER_OF_RANGES_TO_COMPUTE_POSITION)
+    if (indexesOfAvailableRanges_[i].size() != ranges_[i].size() &&
+        indexesOfAvailableRanges_[i].size() < MINIMAL_NUMBER_OF_RANGES_TO_COMPUTE_POSITION)
     {
       return false;
     }
@@ -133,38 +134,34 @@ bool RTLSLocalisationPoseEstimator::initR2W(const RTLSLocalisationRangeArray &ra
 //-----------------------------------------------------------------------------
 void RTLSLocalisationPoseEstimator::computeGuess_()
 {
-
   VectorOfEigenVector2d targetTagGuessPositions(targetTagPositions_.size());
 
-  for( size_t i = 0 ; i< targetTagPositions_.size(); i++)
+  for (size_t i = 0 ; i < targetTagPositions_.size(); i++)
   {
-    targetTagGuessPositions[i]=SimpleTrilateration2D::
-        compute(referenceTagPositions_,ranges_[i],indexesOfAvailableRanges_[i]);
-//    std::cout << " targetTagGuessPositions["<<i <<"]" <<  targetTagGuessPositions[i].transpose() << std::endl;
+    targetTagGuessPositions[i] = SimpleTrilateration2D::
+        compute(referenceTagPositions_, ranges_[i], indexesOfAvailableRanges_[i]);
   }
 
   FindRigidTransformationBySVD<Eigen::Vector2d> estimator_;
-  Eigen::Matrix3d H = estimator_.find(targetTagPositions_,targetTagGuessPositions);
-  estimate_(0)= H(0,2);
-  estimate_(1)= H(1,2);
-  estimate_(2)= rotation2DToEulerAngle<double>(H.block(0,0,2,2));
+  Eigen::Matrix3d H = estimator_.find(targetTagPositions_, targetTagGuessPositions);
+  estimate_(0)= H(0, 2);
+  estimate_(1)= H(1, 2);
+  estimate_(2)= rotation2DToEulerAngle<double>(H.block(0, 0, 2, 2));
 
 //  std::cout<<" guess estimate_ " << std::endl;
 //  std::cout<< estimate_.transpose() << std::endl;
-
 }
 
 //-----------------------------------------------------------------------------
 void RTLSLocalisationPoseEstimator::computeJacobianAndY_()
 {
-
   auto & J = leastSquares_.getJ();
   auto & Y = leastSquares_.getY();
 
-  size_t n=0;
-  for( size_t i = 0 ; i< targetTagPositions_.size(); i++)
+  size_t n = 0;
+  for (size_t i = 0 ; i< targetTagPositions_.size(); i++)
   {
-    for( const size_t & j : indexesOfAvailableRanges_[i])
+    for (const size_t & j : indexesOfAvailableRanges_[i])
     {
       double x = estimate_(0);
       double y = estimate_(1);
@@ -181,22 +178,21 @@ void RTLSLocalisationPoseEstimator::computeJacobianAndY_()
 
       double alpha = x+xt*coso-yt*sino-xr;
       double gamma = y+xt*sino+yt*coso-yr;
-      Y(int(n))=std::sqrt(alpha*alpha+gamma*gamma);
+      Y(int(n)) = std::sqrt(alpha*alpha + gamma*gamma);
 
-      J.row(int(n))<< alpha, gamma, alpha*(-xt*sino - yt*coso) + gamma*(xt*coso - yt*sino);
-      J.row(int(n))/=Y(int(n));
+      J.row(int(n)) << alpha, gamma, alpha*(-xt*sino - yt*coso) + gamma*(xt*coso - yt*sino);
+      J.row(int(n)) /= Y(int(n));
 
-      Y(int(n))-=ranges_[i][j];
+      Y(int(n)) -= ranges_[i][j];
       n++;
     }
   }
-
 
 //  std::cout <<" J "<< std::endl;
 //  std::cout << J << std::endl;
 
 //  std::cout << "Y" << std::endl;
 //  std::cout << Y << std::endl;
+}
 
-}
-}
+}  // namespace romea
