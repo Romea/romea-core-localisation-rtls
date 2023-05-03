@@ -17,8 +17,7 @@ add_library(${PROJECT_NAME} SHARED
   src/rtls_localisation_transceivers.cpp
   src/rtls_localisation_ranges.cpp
   src/rtls_localisation_position_estimator.cpp
-  src/rtls_localisation_pose_estimator.cpp
-  )
+  src/rtls_localisation_pose_estimator.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -26,8 +25,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
   ${romea_core_rtls_INCLUDE_DIRS}
-  ${romea_core_localisation_INCLUDE_DIRS}
-  )
+  ${romea_core_localisation_INCLUDE_DIRS})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
   -Wall -Wextra -O3 -std=c++17)
@@ -76,6 +74,6 @@ set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
 option(BUILD_TESTING "BUILD WITH TESTS" ON)
 
 if(BUILD_TESTING)
- enable_testing()
- add_subdirectory(test)
-endif(BUILD_TESTING)
+  enable_testing()
+  add_subdirectory(test)
+endif()

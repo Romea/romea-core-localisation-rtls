@@ -12,17 +12,17 @@
 
 find_package(GTest REQUIRED)
 
-add_executable(${PROJECT_NAME}_test_simple_trialteration test_simple_trilateration.cpp )
+add_executable(${PROJECT_NAME}_test_simple_trialteration test_simple_trilateration.cpp)
 target_link_libraries(${PROJECT_NAME}_test_simple_trialteration ${PROJECT_NAME} GTest::GTest GTest::Main)
 target_compile_options(${PROJECT_NAME}_test_simple_trialteration PRIVATE -std=c++17)
 add_test(test ${PROJECT_NAME}_test_simple_trialteration)
 
-add_executable(${PROJECT_NAME}_test_position_estimator test_position_estimator.cpp )
+add_executable(${PROJECT_NAME}_test_position_estimator test_position_estimator.cpp)
 target_link_libraries(${PROJECT_NAME}_test_position_estimator  ${PROJECT_NAME} GTest::GTest GTest::Main)
 target_compile_options(${PROJECT_NAME}_test_position_estimator PRIVATE -std=c++17)
 add_test(test ${PROJECT_NAME}_test_position_estimator)
 
-add_executable(${PROJECT_NAME}_test_pose_estimator test_pose_estimator.cpp )
+add_executable(${PROJECT_NAME}_test_pose_estimator test_pose_estimator.cpp)
 target_link_libraries(${PROJECT_NAME}_test_pose_estimator  ${PROJECT_NAME} GTest::GTest GTest::Main)
 target_compile_options(${PROJECT_NAME}_test_pose_estimator PRIVATE -std=c++17)
 add_test(test ${PROJECT_NAME}_test_pose_estimator)
