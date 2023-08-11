@@ -2,15 +2,18 @@ repositories:
     romea_core/romea_common:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_common.git
-    romea_core/romea_imu:
+    romea_core/romea_rtls:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_rtls.git
+   romea_core/romea_rtls_transceiver:
+        type: git
+        url: git@gitlab-ssh.irstea.fr:romea_core/romea_rtls_transceiver.git
     romea_core/romea_filtering:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_filtering.git
     romea_core/romea_localisation:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_localisation.git
-    romea_core/romea_localisation_gps:
+    romea_core/romea_localisation_rtls:
         type: git
         url: git@gitlab-ssh.irstea.fr:romea_core/romea_localisation_rtls.git
