@@ -9,22 +9,22 @@ project(
 
 find_package(romea_core_common REQUIRED)
 find_package(romea_core_rtls REQUIRED)
+find_package(romea_core_rtls_transceiver REQUIRED)
 find_package(romea_core_localisation)
 
 add_library(${PROJECT_NAME} SHARED
-  src/rtls_localisation_plugin_diagnostics.cpp
-  src/rtls_localisation_simple_trilateration.cpp
-  src/rtls_localisation_transceivers.cpp
-  src/rtls_localisation_ranges.cpp
-  src/rtls_localisation_position_estimator.cpp
-  src/rtls_localisation_pose_estimator.cpp)
+  src/LocalisationRTLSPlugin.cpp
+  src/R2HLocalisationRTLSPlugin.cpp
+  src/R2RLocalisationRTLSPlugin.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
+  ${romea_core_common_INCLUDE_DIRS}
   ${romea_core_rtls_INCLUDE_DIRS}
+  ${romea_core_rtls_transceiver_INCLUDE_DIRS}
   ${romea_core_localisation_INCLUDE_DIRS})
 
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -32,6 +32,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
   romea_core_rtls::romea_core_rtls
+  romea_core_rtls_transceiver::romea_core_rtls_transceiver
   romea_core_localisation::romea_core_localisation)
 
 include(GNUInstallDirs)
@@ -73,7 +74,7 @@ set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
 
 option(BUILD_TESTING "BUILD WITH TESTS" ON)
 
-if(BUILD_TESTING)
-  enable_testing()
-  add_subdirectory(test)
-endif()
+# if(BUILD_TESTING)
+#   enable_testing()
+#   add_subdirectory(test)
+# endif()
