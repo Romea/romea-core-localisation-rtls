@@ -17,6 +17,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <iostream>
 
 // romea
 #include "romea_core_localisation_rtls/LocalisationRTLSPlugin.hpp"
@@ -34,7 +35,7 @@ LocalisationRTLSPlugin::LocalisationRTLSPlugin(
   const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
   const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
 : rangeStd_(rangeStd),
-  ranges2D_(RangeArray(respondersPositions_.size(), RangeVector(initiatorsPositions_.size()))),
+  ranges2D_(),
   rangingStatus_(minimalRange, maximalRange, rxPowerRejectionThreshold),
   initiatorsPositions_(initiatorsPositions),
   respondersPositions_(respondersPositions)
@@ -52,10 +53,10 @@ bool LocalisationRTLSPlugin::LocalisationRTLSPlugin::processRangingResult(
   if (status == RTLSTransceiverRangingStatus::AVAILABLE) {
     range_observation = makeRangeObservation_(initiatorIndex, responderIndex, rangingResult);
     auto range2d = computeRange2D_(initiatorIndex, responderIndex, rangingResult);
-    ranges2D_[responderIndex][initiatorIndex] = range2d;
+    storeRange2D(initiatorIndex, responderIndex, range2d);
     return true;
   } else {
-    ranges2D_[responderIndex][initiatorIndex].reset();
+    resetRange2D(initiatorIndex, responderIndex);
     return false;
   }
 }

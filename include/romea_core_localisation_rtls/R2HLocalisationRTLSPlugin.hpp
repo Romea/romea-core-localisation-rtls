@@ -45,6 +45,15 @@ public:
   bool computeLeaderPosition(ObservationPosition & leaderPosition);
 
 private:
+  void storeRange2D(
+    const size_t & initiatorIndex,
+    const size_t & responderIndex,
+    const double & value) override;
+
+  void resetRange2D(
+    const size_t & initiatorIndex,
+    const size_t & responderIndex) override;
+
   bool estimateLeaderPosition_();
 
 private:

@@ -24,17 +24,22 @@
 #include "romea_core_common/containers/Eigen/VectorOfEigenVector.hpp"
 #include "romea_core_rtls_transceiver/RTLSTransceiverRangingResult.hpp"
 #include "romea_core_rtls_transceiver/RTLSTransceiverRangingStatus.hpp"
+#include "romea_core_localisation_rtls/TrilaterationDataBuffer.hpp"
 #include "romea_core_localisation/ObservationRange.hpp"
 namespace romea
 {
 
 class LocalisationRTLSPlugin
 {
+
+
 public:
   using RangingResult = RTLSTransceiverRangingResult;
   using RangingStatus = RTLSTransceiverRangingStatus;
   using RangingStatusEvaluator = RTLSTransceiverRangingStatusEvaluator;
-  using RangeVector = std::vector<std::optional<double>>;
+
+  using Range = std::optional<double>;
+  using RangeVector = std::vector<Range>;
   using RangeArray = std::vector<RangeVector>;
 
 public:
@@ -49,25 +54,34 @@ public:
   virtual ~LocalisationRTLSPlugin() = default;
 
   bool processRangingResult(
-    const size_t & initiator_index,
-    const size_t & responder_index,
+    const size_t & initiatorIndex,
+    const size_t & responderIndex,
     const RangingResult & rangingResult,
     ObservationRange & observation);
 
 protected:
+  virtual void storeRange2D(
+    const size_t & initiatorIndex,
+    const size_t & responderIndex,
+    const double & value) = 0;
+
+  virtual void resetRange2D(
+    const size_t & initiatorIndex,
+    const size_t & responderIndex) = 0;
+
   virtual double computeRange2D_(
-    const size_t & initiator_index,
-    const size_t & responder_index,
+    const size_t & initiatorIndex,
+    const size_t & responderIndex,
     const RangingResult & rangingResult);
 
   ObservationRange makeRangeObservation_(
-    const size_t & initiator_index,
-    const size_t & responder_index,
+    const size_t & initiatorIndex,
+    const size_t & responderIndex,
     const RangingResult & rangingResult);
 
 protected:
   double rangeStd_;
-  RangeArray ranges2D_;
+  TrilaterationRangeBuffer ranges2D_;
   RangingStatusEvaluator rangingStatus_;
 
   VectorOfEigenVector3d initiatorsPositions_;

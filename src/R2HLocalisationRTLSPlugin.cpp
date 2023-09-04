@@ -43,6 +43,8 @@ R2HLocalisationRTLSPlugin::R2HLocalisationRTLSPlugin(
     respondersPositions),
   positionEstimator_(initiatorsPositions)
 {
+  assert(respondersPositions.size() == 1);
+  ranges2D_ = TrilaterationRangeBuffer(respondersPositions.size(), initiatorsPositions.size());
 }
 
 //-----------------------------------------------------------------------------
@@ -60,8 +62,26 @@ bool R2HLocalisationRTLSPlugin::computeLeaderPosition(ObservationPosition & lead
 //-----------------------------------------------------------------------------
 bool R2HLocalisationRTLSPlugin::estimateLeaderPosition_()
 {
-  return positionEstimator_.init(ranges2D_[0]) && positionEstimator_.estimate(
+  return positionEstimator_.init(ranges2D_.get(0)) && positionEstimator_.estimate(
     MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, rangeStd_);
 }
+
+//-----------------------------------------------------------------------------
+void R2HLocalisationRTLSPlugin::storeRange2D(
+  const size_t & initiatorIndex,
+  const size_t & responderIndex,
+  const double & value)
+{
+  ranges2D_.set(responderIndex, initiatorIndex, value);
+}
+
+//-----------------------------------------------------------------------------
+void R2HLocalisationRTLSPlugin::resetRange2D(
+  const size_t & initiatorIndex,
+  const size_t & responderIndex)
+{
+  ranges2D_.reset(responderIndex, initiatorIndex);
+}
+
 
 }   // namespace romea

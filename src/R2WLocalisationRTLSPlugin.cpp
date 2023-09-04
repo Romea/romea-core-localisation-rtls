@@ -43,18 +43,18 @@ R2WLocalisationRTLSPlugin::R2WLocalisationRTLSPlugin(
   reachableResponders_(respondersPositions_, maximalRange),
   poseEstimator_(initiatorsPositions_, respondersPositions)
 {
+  ranges2D_ = TrilaterationRangeBuffer(initiatorsPositions.size(), respondersPositions.size());
 }
 
 //-----------------------------------------------------------------------------
 void R2WLocalisationRTLSPlugin::selectRespondersRanges(
   const std::vector<size_t> & respondersIndexes)
 {
-  // TODO(Jean) refactoring
-  for (size_t i = 0; i < respondersPositions_.size(); ++i) {
-    auto it = std::find(respondersIndexes.begin(), respondersIndexes.end(), i);
+  for (size_t j = 0; j < respondersPositions_.size(); ++j) {
+    auto it = std::find(respondersIndexes.begin(), respondersIndexes.end(), j);
     if (it == respondersIndexes.end()) {
-      for (size_t j = 0; j < initiatorsPositions_.size(); ++j) {
-        ranges2D_[i][j].reset();
+      for (size_t i = 0; i < initiatorsPositions_.size(); ++i) {
+        resetRange2D(i, j);
       }
     }
   }
@@ -75,8 +75,37 @@ bool R2WLocalisationRTLSPlugin::computePose(ObservationPose & pose_observation)
 //-----------------------------------------------------------------------------
 bool R2WLocalisationRTLSPlugin::estimatePose_()
 {
-  return poseEstimator_.init(ranges2D_) && poseEstimator_.estimate(
+  // std::cout << " i" << std::endl;
+  // for (const auto & i :initiatorsPositions_) {
+  //   std::cout << i.transpose() << std::endl;
+  // }
+
+  // std::cout << " r" << std::endl;
+  // for (const auto & r :respondersPositions_) {
+  //   std::cout << r.transpose() << std::endl;
+  // }
+
+  // std::cout << ranges2D_ << std::endl;
+  return poseEstimator_.init(ranges2D_.data()) && poseEstimator_.estimate(
     MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, rangeStd_);
 }
+
+//-----------------------------------------------------------------------------
+void R2WLocalisationRTLSPlugin::storeRange2D(
+  const size_t & initiatorIndex,
+  const size_t & responderIndex,
+  const double & value)
+{
+  ranges2D_.set(initiatorIndex, responderIndex, value);
+}
+
+//-----------------------------------------------------------------------------
+void R2WLocalisationRTLSPlugin::resetRange2D(
+  const size_t & initiatorIndex,
+  const size_t & responderIndex)
+{
+  ranges2D_.reset(initiatorIndex, responderIndex);
+}
+
 
 }   // namespace romea

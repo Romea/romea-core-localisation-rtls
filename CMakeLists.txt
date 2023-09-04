@@ -15,7 +15,9 @@ find_package(romea_core_localisation)
 add_library(${PROJECT_NAME} SHARED
   src/LocalisationRTLSPlugin.cpp
   src/R2HLocalisationRTLSPlugin.cpp
-  src/R2RLocalisationRTLSPlugin.cpp)
+  src/R2RLocalisationRTLSPlugin.cpp
+  src/R2WLocalisationRTLSPlugin.cpp
+  src/TrilaterationDataBuffer.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

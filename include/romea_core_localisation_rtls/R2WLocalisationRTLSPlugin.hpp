@@ -48,11 +48,20 @@ public:
   bool computePose(ObservationPose & pose_observation);
 
 private:
+  void storeRange2D(
+    const size_t & initiatorIndex,
+    const size_t & responderIndex,
+    const double & value) override;
+
+  void resetRange2D(
+    const size_t & initiatorIndex,
+    const size_t & responderIndex) override;
+
   bool estimatePose_();
 
 private:
-  RTLSPose2DEstimator poseEstimator_;
   RTLSReachableTransceivers reachableResponders_;
+  RTLSPose2DEstimator poseEstimator_;
 };
 
 }  // namespace romea
