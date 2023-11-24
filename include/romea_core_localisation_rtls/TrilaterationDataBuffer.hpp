@@ -22,6 +22,8 @@
 
 namespace romea
 {
+namespace core
+{
 
 
 class TrilaterationRangeBuffer
@@ -68,7 +70,7 @@ private:
 
 std::ostream & operator<<(std::ostream & os, const TrilaterationRangeBuffer & buffer);
 
-
+}  // namespace core
 }  // namespace romea
 
 #endif  // ROMEA_CORE_LOCALISATION_RTLS__TRILATERATIONRANGEBUFFER_HPP_

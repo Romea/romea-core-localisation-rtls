@@ -27,6 +27,8 @@
 
 namespace romea
 {
+namespace core
+{
 
 class R2RLocalisationRTLSPlugin : public LocalisationRTLSPlugin
 {
@@ -59,6 +61,7 @@ private:
   RTLSPose2DEstimator poseEstimator_;
 };
 
+}  // namespace core
 }  // namespace romea
 
 #endif  // ROMEA_CORE_LOCALISATION_RTLS__R2HLOCALISATIONRTLSPLUGIN_HPP_

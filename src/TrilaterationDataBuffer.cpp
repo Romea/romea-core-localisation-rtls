@@ -23,6 +23,8 @@
 
 namespace romea
 {
+namespace core
+{
 
 //-----------------------------------------------------------------------------
 TrilaterationRangeBuffer::TrilaterationRangeBuffer()
@@ -112,4 +114,5 @@ std::ostream & operator<<(std::ostream & os, const TrilaterationRangeBuffer & bu
   return os;
 }
 
+}  // namespace core
 }  // namespace romea

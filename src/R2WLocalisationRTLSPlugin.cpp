@@ -24,6 +24,8 @@ const double MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE = 20;
 
 namespace romea
 {
+namespace core
+{
 
 //-----------------------------------------------------------------------------
 R2WLocalisationRTLSPlugin::R2WLocalisationRTLSPlugin(
@@ -107,5 +109,5 @@ void R2WLocalisationRTLSPlugin::resetRange2D(
   ranges2D_.reset(initiatorIndex, responderIndex);
 }
 
-
+}   // namespace core
 }   // namespace romea

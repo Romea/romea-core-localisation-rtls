@@ -25,6 +25,8 @@
 
 namespace romea
 {
+namespace core
+{
 
 //-----------------------------------------------------------------------------
 LocalisationRTLSPlugin::LocalisationRTLSPlugin(
@@ -87,4 +89,5 @@ double LocalisationRTLSPlugin::computeRange2D_(
   return std::sqrt(std::pow(rangingResult.range, 2) - dz * dz);
 }
 
+}  // namespace core
 }  // namespace romea

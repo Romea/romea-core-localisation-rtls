@@ -26,7 +26,10 @@
 #include "romea_core_rtls_transceiver/RTLSTransceiverRangingStatus.hpp"
 #include "romea_core_localisation_rtls/TrilaterationDataBuffer.hpp"
 #include "romea_core_localisation/ObservationRange.hpp"
+
 namespace romea
+{
+namespace core
 {
 
 class LocalisationRTLSPlugin
@@ -88,6 +91,7 @@ protected:
   VectorOfEigenVector3d respondersPositions_;
 };
 
+}  // namespace ros2
 }  // namespace romea
 
 #endif  // ROMEA_CORE_LOCALISATION_RTLS__LOCALISATIONRTLSPLUGIN_HPP_
