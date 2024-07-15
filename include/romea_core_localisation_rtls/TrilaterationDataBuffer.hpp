@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROMEA_CORE_LOCALISATION_RTLS__TRILATERATIONRANGEBUFFER_HPP_
-#define ROMEA_CORE_LOCALISATION_RTLS__TRILATERATIONRANGEBUFFER_HPP_
+#ifndef ROMEA_CORE_LOCALISATION_RTLS__TRILATERATIONDATABUFFER_HPP_
+#define ROMEA_CORE_LOCALISATION_RTLS__TRILATERATIONDATABUFFER_HPP_
 
 // std
+#include <optional>
 #include <vector>
 #include <iostream>
-#include <optional>
 
 namespace romea
 {
@@ -73,4 +73,4 @@ std::ostream & operator<<(std::ostream & os, const TrilaterationRangeBuffer & bu
 }  // namespace core
 }  // namespace romea
 
-#endif  // ROMEA_CORE_LOCALISATION_RTLS__TRILATERATIONRANGEBUFFER_HPP_
+#endif  // ROMEA_CORE_LOCALISATION_RTLS__TRILATERATIONDATABUFFER_HPP_

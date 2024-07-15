@@ -14,9 +14,9 @@
 
 
 // std
+#include <optional>
 #include <vector>
 #include <ostream>
-#include <optional>
 
 // romea
 #include "romea_core_localisation_rtls/TrilaterationDataBuffer.hpp"
@@ -30,7 +30,6 @@ namespace core
 TrilaterationRangeBuffer::TrilaterationRangeBuffer()
 : ranges_()
 {
-
 }
 
 //-----------------------------------------------------------------------------
@@ -39,7 +38,6 @@ TrilaterationRangeBuffer::TrilaterationRangeBuffer(
   const size_t cols)
 : ranges_(rows, RangeVector(cols, Range()))
 {
-
 }
 
 //-----------------------------------------------------------------------------

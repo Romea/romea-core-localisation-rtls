@@ -13,9 +13,9 @@
 // limitations under the License.
 
 // std
+#include <optional>
 #include <vector>
 #include <string>
-#include <optional>
 
 // romea
 #include "romea_core_localisation_rtls/R2RLocalisationRTLSPlugin.hpp"

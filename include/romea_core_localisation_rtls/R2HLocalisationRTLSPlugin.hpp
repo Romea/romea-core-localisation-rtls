@@ -16,9 +16,9 @@
 #define ROMEA_CORE_LOCALISATION_RTLS__R2HLOCALISATIONRTLSPLUGIN_HPP_
 
 // std
+#include <optional>
 #include <vector>
 #include <string>
-#include <optional>
 
 // romea
 #include "romea_core_rtls/trilateration/RTLSPosition2DEstimator.hpp"
@@ -62,7 +62,7 @@ private:
   RTLSPosition2DEstimator positionEstimator_;
 };
 
-}  // namespace code
+}  // namespace core
 }  // namespace romea
 
 #endif  // ROMEA_CORE_LOCALISATION_RTLS__R2HLOCALISATIONRTLSPLUGIN_HPP_

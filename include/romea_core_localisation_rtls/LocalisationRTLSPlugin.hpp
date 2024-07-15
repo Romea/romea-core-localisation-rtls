@@ -16,9 +16,9 @@
 #define ROMEA_CORE_LOCALISATION_RTLS__LOCALISATIONRTLSPLUGIN_HPP_
 
 // std
+#include <optional>
 #include <vector>
 #include <string>
-#include <optional>
 
 // romea
 #include "romea_core_common/containers/Eigen/VectorOfEigenVector.hpp"
@@ -34,8 +34,6 @@ namespace core
 
 class LocalisationRTLSPlugin
 {
-
-
 public:
   using RangingResult = RTLSTransceiverRangingResult;
   using RangingStatus = RTLSTransceiverRangingStatus;
@@ -91,7 +89,7 @@ protected:
   VectorOfEigenVector3d respondersPositions_;
 };
 
-}  // namespace ros2
+}  // namespace core
 }  // namespace romea
 
 #endif  // ROMEA_CORE_LOCALISATION_RTLS__LOCALISATIONRTLSPLUGIN_HPP_
