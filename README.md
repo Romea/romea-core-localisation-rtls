@@ -1,0 +1,3 @@
+## Romea Core Localisation RTLS Library
+
+This library provides a plugin that transforms data from an RTLS transceiver into Gaussian observations (position, pose, range), enabling seamless integration with the localization algorithms in the **romea_core_localisation** library. Additionally, it includes monitoring tools to track RTLS data and generate diagnostic reports, helping to detect and troubleshoot potential issues in real-time.
