@@ -7,7 +7,7 @@ This library provides a plugin that transforms data from an RTLS transceiver int
 1. create a ROS workspace
 2. cd worskpace
 3. mkdir src
-4. wget https://raw.githubusercontent.com/Romea/romea-core-localisation-imu/refs/heads/main/romea_localisation_rtls_public.repos
+4. wget https://raw.githubusercontent.com/Romea/romea-core-localisation-rtls/refs/heads/main/romea_localisation_rtls_public.repos
 5. vcs import src < romea_localisation_rtls_public.repos
 6. build packages
    - catkin build for ROS1
