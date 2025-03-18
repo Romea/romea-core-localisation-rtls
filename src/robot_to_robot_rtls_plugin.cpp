@@ -18,7 +18,7 @@
 #include <string>
 
 // romea
-#include "romea_core_localisation_rtls/R2RLocalisationRTLSPlugin.hpp"
+#include "romea_core_localisation_rtls/robot_to_robot_rtls_plugin.hpp"
 
 const double MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE = 20;
 
@@ -26,33 +26,35 @@ namespace romea
 {
 namespace core
 {
+namespace localisation
+{
 
 //-----------------------------------------------------------------------------
-R2RLocalisationRTLSPlugin::R2RLocalisationRTLSPlugin(
+R2RRTLSPlugin::R2RRTLSPlugin(
   const double & rangeStd,
   const double & minimalRange,
   const double & maximalRange,
   const uint8_t & rxPowerRejectionThreshold,
   const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
   const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
-: LocalisationRTLSPlugin(
+: RTLSPluginBase(
     rangeStd,
     minimalRange,
     maximalRange,
     rxPowerRejectionThreshold,
     initiatorsPositions,
     respondersPositions),
-  poseEstimator_(respondersPositions, initiatorsPositions_)
+  pose_estimator_(respondersPositions, initiatorsPositions)
 {
-  ranges2D_ = TrilaterationRangeBuffer(respondersPositions.size(), initiatorsPositions.size());
+  ranges2d_ = TrilaterationRangeBuffer(respondersPositions.size(), initiatorsPositions.size());
 }
 
 //-----------------------------------------------------------------------------
-bool R2RLocalisationRTLSPlugin::computeLeaderPose(ObservationPose & leaderPoseObservation)
+bool R2RRTLSPlugin::compute_leader_pose(ObservationPose & leaderPoseObservation)
 {
-  if (estimateLeaderPose_()) {
-    leaderPoseObservation.firstMoment = poseEstimator_.getEstimate();
-    leaderPoseObservation.secondMoment = poseEstimator_.getEstimateCovariance();
+  if (estimate_leader_pose_()) {
+    leaderPoseObservation.firstMoment = pose_estimator_.getEstimate();
+    leaderPoseObservation.secondMoment = pose_estimator_.getEstimateCovariance();
     return true;
   } else {
     return false;
@@ -60,28 +62,29 @@ bool R2RLocalisationRTLSPlugin::computeLeaderPose(ObservationPose & leaderPoseOb
 }
 
 //-----------------------------------------------------------------------------
-bool R2RLocalisationRTLSPlugin::estimateLeaderPose_()
+bool R2RRTLSPlugin::estimate_leader_pose_()
 {
-  return poseEstimator_.init(ranges2D_.data()) && poseEstimator_.estimate(
-    MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, rangeStd_);
+  return pose_estimator_.init(ranges2d_.data()) && pose_estimator_.estimate(
+    MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, range_std_);
 }
 
 //-----------------------------------------------------------------------------
-void R2RLocalisationRTLSPlugin::storeRange2D(
+void R2RRTLSPlugin::store_range2d(
   const size_t & initiatorIndex,
   const size_t & responderIndex,
   const double & value)
 {
-  ranges2D_.set(responderIndex, initiatorIndex, value);
+  ranges2d_.set(responderIndex, initiatorIndex, value);
 }
 
 //-----------------------------------------------------------------------------
-void R2RLocalisationRTLSPlugin::resetRange2D(
+void R2RRTLSPlugin::reset_range2d(
   const size_t & initiatorIndex,
   const size_t & responderIndex)
 {
-  ranges2D_.reset(responderIndex, initiatorIndex);
+  ranges2d_.reset(responderIndex, initiatorIndex);
 }
 
+}   // namespace localisation
 }   // namespace core
 }   // namespace romea

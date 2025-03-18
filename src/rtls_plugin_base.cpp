@@ -20,74 +20,77 @@
 #include <iostream>
 
 // romea
-#include "romea_core_localisation_rtls/LocalisationRTLSPlugin.hpp"
+#include "romea_core_localisation_rtls/rtls_plugin_base.hpp"
 
 
 namespace romea
 {
 namespace core
 {
+namespace localisation
+{
 
 //-----------------------------------------------------------------------------
-LocalisationRTLSPlugin::LocalisationRTLSPlugin(
+RTLSPluginBase::RTLSPluginBase(
   const double & rangeStd,
   const double & minimalRange,
   const double & maximalRange,
   const uint8_t & rxPowerRejectionThreshold,
   const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
   const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
-: rangeStd_(rangeStd),
-  ranges2D_(),
-  rangingStatus_(minimalRange, maximalRange, rxPowerRejectionThreshold),
-  initiatorsPositions_(initiatorsPositions),
-  respondersPositions_(respondersPositions)
+: range_std_(rangeStd),
+  ranges2d_(),
+  ranging_status_(minimalRange, maximalRange, rxPowerRejectionThreshold),
+  initiators_positions_(initiatorsPositions),
+  responders_positions_(respondersPositions)
 {
 }
 
 //-----------------------------------------------------------------------------
-bool LocalisationRTLSPlugin::LocalisationRTLSPlugin::processRangingResult(
+bool RTLSPluginBase::RTLSPluginBase::process_ranging_result(
   const size_t & initiatorIndex,
   const size_t & responderIndex,
   const RangingResult & rangingResult,
   ObservationRange & range_observation)
 {
-  auto status = rangingStatus_.evaluate(rangingResult);
+  auto status = ranging_status_.evaluate(rangingResult);
   if (status == RTLSTransceiverRangingStatus::AVAILABLE) {
-    range_observation = makeRangeObservation_(initiatorIndex, responderIndex, rangingResult);
-    auto range2d = computeRange2D_(initiatorIndex, responderIndex, rangingResult);
-    storeRange2D(initiatorIndex, responderIndex, range2d);
+    range_observation = make_range_observation_(initiatorIndex, responderIndex, rangingResult);
+    auto range2d = compute_range2d_(initiatorIndex, responderIndex, rangingResult);
+    store_range2d(initiatorIndex, responderIndex, range2d);
     return true;
   } else {
-    resetRange2D(initiatorIndex, responderIndex);
+    reset_range2d(initiatorIndex, responderIndex);
     return false;
   }
 }
 
 //-----------------------------------------------------------------------------
-ObservationRange LocalisationRTLSPlugin::makeRangeObservation_(
+ObservationRange RTLSPluginBase::make_range_observation_(
   const size_t & initiator_index,
   const size_t & responder_index,
   const RangingResult & rangingResult)
 {
   ObservationRange observation;
   observation.firstMoment = rangingResult.range;
-  observation.secondMoment = rangeStd_ * rangeStd_;
-  observation.initiatorPosition = initiatorsPositions_[initiator_index];
-  observation.responderPosition = respondersPositions_[responder_index];
+  observation.secondMoment = range_std_ * range_std_;
+  observation.initiator_position = initiators_positions_[initiator_index];
+  observation.responder_position = responders_positions_[responder_index];
   return observation;
 }
 
 //-----------------------------------------------------------------------------
-double LocalisationRTLSPlugin::computeRange2D_(
+double RTLSPluginBase::compute_range2d_(
   const size_t & initiator_index,
   const size_t & responder_index,
   const RangingResult & rangingResult)
 {
-  double dz = initiatorsPositions_[initiator_index].z() -
-    respondersPositions_[responder_index].z();
+  double dz = initiators_positions_[initiator_index].z() -
+    responders_positions_[responder_index].z();
 
   return std::sqrt(std::pow(rangingResult.range, 2) - dz * dz);
 }
 
+}  // namespace localisation
 }  // namespace core
 }  // namespace romea

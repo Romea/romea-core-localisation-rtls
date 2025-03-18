@@ -19,11 +19,13 @@
 #include <ostream>
 
 // romea
-#include "romea_core_localisation_rtls/TrilaterationDataBuffer.hpp"
+#include "romea_core_localisation_rtls/trilateration_data_buffer.hpp"
 
 namespace romea
 {
 namespace core
+{
+namespace localisation
 {
 
 //-----------------------------------------------------------------------------
@@ -112,5 +114,6 @@ std::ostream & operator<<(std::ostream & os, const TrilaterationRangeBuffer & bu
   return os;
 }
 
+}  // namespace localisation
 }  // namespace core
 }  // namespace romea

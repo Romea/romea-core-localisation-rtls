@@ -18,7 +18,8 @@
 #include <string>
 
 // romea
-#include "romea_core_localisation_rtls/R2WLocalisationRTLSPlugin.hpp"
+#include "romea_core_localisation_rtls/robot_to_human_rtls_plugin.hpp"
+
 
 const double MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE = 20;
 
@@ -26,48 +27,36 @@ namespace romea
 {
 namespace core
 {
+namespace localisation
+{
 
 //-----------------------------------------------------------------------------
-R2WLocalisationRTLSPlugin::R2WLocalisationRTLSPlugin(
+R2HRTLSPlugin::R2HRTLSPlugin(
   const double & rangeStd,
   const double & minimalRange,
   const double & maximalRange,
   const uint8_t & rxPowerRejectionThreshold,
   const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
   const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
-: LocalisationRTLSPlugin(
+: RTLSPluginBase(
     rangeStd,
     minimalRange,
     maximalRange,
     rxPowerRejectionThreshold,
     initiatorsPositions,
     respondersPositions),
-  reachableResponders_(respondersPositions_, maximalRange),
-  poseEstimator_(initiatorsPositions_, respondersPositions)
+  position_estimator_(initiatorsPositions)
 {
-  ranges2D_ = TrilaterationRangeBuffer(initiatorsPositions.size(), respondersPositions.size());
+  assert(respondersPositions.size() == 1);
+  ranges2d_ = TrilaterationRangeBuffer(respondersPositions.size(), initiatorsPositions.size());
 }
 
 //-----------------------------------------------------------------------------
-void R2WLocalisationRTLSPlugin::selectRespondersRanges(
-  const std::vector<size_t> & respondersIndexes)
+bool R2HRTLSPlugin::compute_leader_position(ObservationPosition & leader_position)
 {
-  for (size_t j = 0; j < respondersPositions_.size(); ++j) {
-    auto it = std::find(respondersIndexes.begin(), respondersIndexes.end(), j);
-    if (it == respondersIndexes.end()) {
-      for (size_t i = 0; i < initiatorsPositions_.size(); ++i) {
-        resetRange2D(i, j);
-      }
-    }
-  }
-}
-
-//-----------------------------------------------------------------------------
-bool R2WLocalisationRTLSPlugin::computePose(ObservationPose & pose_observation)
-{
-  if (estimatePose_()) {
-    pose_observation.firstMoment = poseEstimator_.getEstimate();
-    pose_observation.secondMoment = poseEstimator_.getEstimateCovariance();
+  if (estimate_leader_position_()) {
+    leader_position.firstMoment = position_estimator_.getEstimate();
+    leader_position.secondMoment = position_estimator_.getEstimateCovariance();
     return true;
   } else {
     return false;
@@ -75,39 +64,29 @@ bool R2WLocalisationRTLSPlugin::computePose(ObservationPose & pose_observation)
 }
 
 //-----------------------------------------------------------------------------
-bool R2WLocalisationRTLSPlugin::estimatePose_()
+bool R2HRTLSPlugin::estimate_leader_position_()
 {
-  // std::cout << " i" << std::endl;
-  // for (const auto & i :initiatorsPositions_) {
-  //   std::cout << i.transpose() << std::endl;
-  // }
-
-  // std::cout << " r" << std::endl;
-  // for (const auto & r :respondersPositions_) {
-  //   std::cout << r.transpose() << std::endl;
-  // }
-
-  // std::cout << ranges2D_ << std::endl;
-  return poseEstimator_.init(ranges2D_.data()) && poseEstimator_.estimate(
-    MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, rangeStd_);
+  return position_estimator_.init(ranges2d_.get(0)) && position_estimator_.estimate(
+    MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, range_std_);
 }
 
 //-----------------------------------------------------------------------------
-void R2WLocalisationRTLSPlugin::storeRange2D(
+void R2HRTLSPlugin::store_range2d(
   const size_t & initiatorIndex,
   const size_t & responderIndex,
   const double & value)
 {
-  ranges2D_.set(initiatorIndex, responderIndex, value);
+  ranges2d_.set(responderIndex, initiatorIndex, value);
 }
 
 //-----------------------------------------------------------------------------
-void R2WLocalisationRTLSPlugin::resetRange2D(
+void R2HRTLSPlugin::reset_range2d(
   const size_t & initiatorIndex,
   const size_t & responderIndex)
 {
-  ranges2D_.reset(initiatorIndex, responderIndex);
+  ranges2d_.reset(responderIndex, initiatorIndex);
 }
 
+}   // namespace localisation
 }   // namespace core
 }   // namespace romea

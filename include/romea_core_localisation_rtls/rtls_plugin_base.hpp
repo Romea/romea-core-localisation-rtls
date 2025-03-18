@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROMEA_CORE_LOCALISATION_RTLS__LOCALISATIONRTLSPLUGIN_HPP_
-#define ROMEA_CORE_LOCALISATION_RTLS__LOCALISATIONRTLSPLUGIN_HPP_
+#ifndef ROMEA_CORE_LOCALISATION_RTLS__RTLS_PLUGIN_BASE_HPP_
+#define ROMEA_CORE_LOCALISATION_RTLS__RTLS_PLUGIN_BASE_HPP_
 
 // std
 #include <optional>
@@ -24,15 +24,17 @@
 #include "romea_core_common/containers/Eigen/VectorOfEigenVector.hpp"
 #include "romea_core_rtls_transceiver/RTLSTransceiverRangingResult.hpp"
 #include "romea_core_rtls_transceiver/RTLSTransceiverRangingStatus.hpp"
-#include "romea_core_localisation_rtls/TrilaterationDataBuffer.hpp"
-#include "romea_core_localisation/ObservationRange.hpp"
+#include "romea_core_localisation_rtls/trilateration_data_buffer.hpp"
+#include "romea_core_localisation/observation_range.hpp"
 
 namespace romea
 {
 namespace core
 {
+namespace localisation
+{
 
-class LocalisationRTLSPlugin
+class RTLSPluginBase
 {
 public:
   using RangingResult = RTLSTransceiverRangingResult;
@@ -44,7 +46,7 @@ public:
   using RangeArray = std::vector<RangeVector>;
 
 public:
-  LocalisationRTLSPlugin(
+  RTLSPluginBase(
     const double & rangeStd,
     const double & minimalRange,
     const double & maximalRange,
@@ -52,44 +54,45 @@ public:
     const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
     const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions);
 
-  virtual ~LocalisationRTLSPlugin() = default;
+  virtual ~RTLSPluginBase() = default;
 
-  bool processRangingResult(
+  bool process_ranging_result(
     const size_t & initiatorIndex,
     const size_t & responderIndex,
     const RangingResult & rangingResult,
     ObservationRange & observation);
 
 protected:
-  virtual void storeRange2D(
+  virtual void store_range2d(
     const size_t & initiatorIndex,
     const size_t & responderIndex,
     const double & value) = 0;
 
-  virtual void resetRange2D(
+  virtual void reset_range2d(
     const size_t & initiatorIndex,
     const size_t & responderIndex) = 0;
 
-  virtual double computeRange2D_(
+  virtual double compute_range2d_(
     const size_t & initiatorIndex,
     const size_t & responderIndex,
     const RangingResult & rangingResult);
 
-  ObservationRange makeRangeObservation_(
+  ObservationRange make_range_observation_(
     const size_t & initiatorIndex,
     const size_t & responderIndex,
     const RangingResult & rangingResult);
 
 protected:
-  double rangeStd_;
-  TrilaterationRangeBuffer ranges2D_;
-  RangingStatusEvaluator rangingStatus_;
+  double range_std_;
+  TrilaterationRangeBuffer ranges2d_;
+  RangingStatusEvaluator ranging_status_;
 
-  VectorOfEigenVector3d initiatorsPositions_;
-  VectorOfEigenVector3d respondersPositions_;
+  VectorOfEigenVector3d initiators_positions_;
+  VectorOfEigenVector3d responders_positions_;
 };
 
+}  // namespace localisation
 }  // namespace core
 }  // namespace romea
 
-#endif  // ROMEA_CORE_LOCALISATION_RTLS__LOCALISATIONRTLSPLUGIN_HPP_
+#endif  // ROMEA_CORE_LOCALISATION_RTLS__RTLS_PLUGIN_BASE_HPP_

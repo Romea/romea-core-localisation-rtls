@@ -13,11 +13,11 @@ find_package(romea_core_rtls_transceiver REQUIRED)
 find_package(romea_core_localisation)
 
 add_library(${PROJECT_NAME} SHARED
-  src/LocalisationRTLSPlugin.cpp
-  src/R2HLocalisationRTLSPlugin.cpp
-  src/R2RLocalisationRTLSPlugin.cpp
-  src/R2WLocalisationRTLSPlugin.cpp
-  src/TrilaterationDataBuffer.cpp)
+  src/rtls_plugin_base.cpp
+  src/robot_to_human_rtls_plugin.cpp
+  src/robot_to_robot_rtls_plugin.cpp
+  src/robot_to_world_rtls_plugin.cpp
+  src/trilateration_data_buffer.cpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

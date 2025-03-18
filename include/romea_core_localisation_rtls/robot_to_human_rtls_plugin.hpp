@@ -12,30 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROMEA_CORE_LOCALISATION_RTLS__R2WLOCALISATIONRTLSPLUGIN_HPP_
-#define ROMEA_CORE_LOCALISATION_RTLS__R2WLOCALISATIONRTLSPLUGIN_HPP_
+#ifndef ROMEA_CORE_LOCALISATION_RTLS__ROBOT_TO_HUMAN_RTLS_PLUGIN_HPP_
+#define ROMEA_CORE_LOCALISATION_RTLS__ROBOT_TO_HUMAN_RTLS_PLUGIN_HPP_
 
 // std
 #include <optional>
 #include <vector>
 #include <string>
-#include <mutex>
 
 // romea
-#include "romea_core_rtls/trilateration/RTLSPose2DEstimator.hpp"
-#include "romea_core_rtls/coordination/RTLSReachableTransceivers.hpp"
-#include "romea_core_localisation_rtls/LocalisationRTLSPlugin.hpp"
-#include "romea_core_localisation/ObservationPose.hpp"
+#include "romea_core_rtls/trilateration/RTLSPosition2DEstimator.hpp"
+#include "romea_core_rtls/coordination/RTLSSimpleCoordinatorScheduler.hpp"
+#include "romea_core_localisation_rtls/rtls_plugin_base.hpp"
+#include "romea_core_localisation/observation_position.hpp"
 
 namespace romea
 {
 namespace core
 {
+namespace localisation
+{
 
-class R2WLocalisationRTLSPlugin : public LocalisationRTLSPlugin
+class R2HRTLSPlugin : public RTLSPluginBase
 {
 public:
-  R2WLocalisationRTLSPlugin(
+  R2HRTLSPlugin(
     const double & rangeStd,
     const double & minimalRange,
     const double & maximalRange,
@@ -43,30 +44,28 @@ public:
     const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
     const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions);
 
-  virtual ~R2WLocalisationRTLSPlugin() = default;
+  virtual ~R2HRTLSPlugin() = default;
 
-  void selectRespondersRanges(const std::vector<size_t> & respondersIndexes);
-
-  bool computePose(ObservationPose & pose_observation);
+  bool compute_leader_position(ObservationPosition & leaderPosition);
 
 private:
-  void storeRange2D(
+  void store_range2d(
     const size_t & initiatorIndex,
     const size_t & responderIndex,
     const double & value) override;
 
-  void resetRange2D(
+  void reset_range2d(
     const size_t & initiatorIndex,
     const size_t & responderIndex) override;
 
-  bool estimatePose_();
+  bool estimate_leader_position_();
 
 private:
-  RTLSReachableTransceivers reachableResponders_;
-  RTLSPose2DEstimator poseEstimator_;
+  RTLSPosition2DEstimator position_estimator_;
 };
 
+}  // namespace localisation
 }  // namespace core
 }  // namespace romea
 
-#endif  // ROMEA_CORE_LOCALISATION_RTLS__R2WLOCALISATIONRTLSPLUGIN_HPP_
+#endif  // ROMEA_CORE_LOCALISATION_RTLS__ROBOT_TO_HUMAN_RTLS_PLUGIN_HPP_

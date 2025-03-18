@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROMEA_CORE_LOCALISATION_RTLS__R2HLOCALISATIONRTLSPLUGIN_HPP_
-#define ROMEA_CORE_LOCALISATION_RTLS__R2HLOCALISATIONRTLSPLUGIN_HPP_
+#ifndef ROMEA_CORE_LOCALISATION_RTLS__ROBOT_TO_ROBOT_RTLS_PLUGIN_HPP_
+#define ROMEA_CORE_LOCALISATION_RTLS__ROBOT_TO_ROBOT_RTLS_PLUGIN_HPP_
 
 // std
 #include <optional>
@@ -21,20 +21,21 @@
 #include <string>
 
 // romea
-#include "romea_core_rtls/trilateration/RTLSPosition2DEstimator.hpp"
-#include "romea_core_rtls/coordination/RTLSSimpleCoordinatorScheduler.hpp"
-#include "romea_core_localisation_rtls/LocalisationRTLSPlugin.hpp"
-#include "romea_core_localisation/ObservationPosition.hpp"
+#include "romea_core_rtls/trilateration/RTLSPose2DEstimator.hpp"
+#include "romea_core_localisation_rtls/rtls_plugin_base.hpp"
+#include "romea_core_localisation/observation_pose.hpp"
 
 namespace romea
 {
 namespace core
 {
+namespace localisation
+{
 
-class R2HLocalisationRTLSPlugin : public LocalisationRTLSPlugin
+class R2RRTLSPlugin : public RTLSPluginBase
 {
 public:
-  R2HLocalisationRTLSPlugin(
+  R2RRTLSPlugin(
     const double & rangeStd,
     const double & minimalRange,
     const double & maximalRange,
@@ -42,27 +43,28 @@ public:
     const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
     const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions);
 
-  virtual ~R2HLocalisationRTLSPlugin() = default;
+  virtual ~R2RRTLSPlugin() = default;
 
-  bool computeLeaderPosition(ObservationPosition & leaderPosition);
+  bool compute_leader_pose(ObservationPose & leaserPose);
 
 private:
-  void storeRange2D(
+  void store_range2d(
     const size_t & initiatorIndex,
     const size_t & responderIndex,
     const double & value) override;
 
-  void resetRange2D(
+  void reset_range2d(
     const size_t & initiatorIndex,
     const size_t & responderIndex) override;
 
-  bool estimateLeaderPosition_();
+  bool estimate_leader_pose_();
 
 private:
-  RTLSPosition2DEstimator positionEstimator_;
+  RTLSPose2DEstimator pose_estimator_;
 };
 
+}  // namespace localisation
 }  // namespace core
 }  // namespace romea
 
-#endif  // ROMEA_CORE_LOCALISATION_RTLS__R2HLOCALISATIONRTLSPLUGIN_HPP_
+#endif  // ROMEA_CORE_LOCALISATION_RTLS__ROBOT_TO_ROBOT_RTLS_PLUGIN_HPP_
