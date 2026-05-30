@@ -1,4 +1,5 @@
-// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Copyright 2022 INRAE, French National Research Institute for Agriculture,
+// Food and Environment
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,47 +18,40 @@
 
 // std
 #include <optional>
-#include <vector>
 #include <string>
+#include <vector>
 
 // romea
-#include "romea_core_rtls/trilateration/RTLSPose2DEstimator.hpp"
-#include "romea_core_localisation_rtls/LocalisationRTLSPlugin.hpp"
 #include "romea_core_localisation/ObservationPose.hpp"
+#include "romea_core_localisation_rtls/LocalisationRTLSPlugin.hpp"
+#include "romea_core_rtls/trilateration/pose2D_estimator.hpp"
 
-namespace romea
-{
-namespace core
-{
+namespace romea {
+namespace core {
 
-class R2RLocalisationRTLSPlugin : public LocalisationRTLSPlugin
-{
-public:
+class R2RLocalisationRTLSPlugin : public LocalisationRTLSPlugin {
+ public:
   R2RLocalisationRTLSPlugin(
-    const double & rangeStd,
-    const double & minimalRange,
-    const double & maximalRange,
-    const uint8_t & rxPowerRejectionThreshold,
-    const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
-    const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions);
+      const double& rangeStd, const double& minimalRange,
+      const double& maximalRange, const uint8_t& rxPowerRejectionThreshold,
+      const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
+      const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions);
 
   virtual ~R2RLocalisationRTLSPlugin() = default;
 
-  bool computeLeaderPose(ObservationPose & leaserPose);
+  bool computeLeaderPose(ObservationPose& leaserPose);
 
-private:
-  void storeRange2D(
-    const size_t & initiatorIndex,
-    const size_t & responderIndex,
-    const double & value) override;
+ private:
+  void storeRange2D(const size_t& initiator_index,
+                    const size_t& responder_index,
+                    const double& value) override;
 
-  void resetRange2D(
-    const size_t & initiatorIndex,
-    const size_t & responderIndex) override;
+  void resetRange2D(const size_t& initiator_index,
+                    const size_t& responder_index) override;
 
   bool estimateLeaderPose_();
 
-private:
+ private:
   RTLSPose2DEstimator poseEstimator_;
 };
 

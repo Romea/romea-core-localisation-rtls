@@ -1,4 +1,5 @@
-// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Copyright 2022 INRAE, French National Research Institute for Agriculture,
+// Food and Environment
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,44 +15,35 @@
 
 // std
 #include <optional>
-#include <vector>
 #include <string>
+#include <vector>
 
 // romea
 #include "romea_core_localisation_rtls/R2HLocalisationRTLSPlugin.hpp"
 
-
 const double MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE = 20;
 
-namespace romea
-{
-namespace core
-{
+namespace romea {
+namespace core {
 
 //-----------------------------------------------------------------------------
 R2HLocalisationRTLSPlugin::R2HLocalisationRTLSPlugin(
-  const double & rangeStd,
-  const double & minimalRange,
-  const double & maximalRange,
-  const uint8_t & rxPowerRejectionThreshold,
-  const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
-  const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
-: LocalisationRTLSPlugin(
-    rangeStd,
-    minimalRange,
-    maximalRange,
-    rxPowerRejectionThreshold,
-    initiatorsPositions,
-    respondersPositions),
-  positionEstimator_(initiatorsPositions)
-{
+    const double& rangeStd, const double& minimalRange,
+    const double& maximalRange, const uint8_t& rxPowerRejectionThreshold,
+    const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
+    const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions)
+    : LocalisationRTLSPlugin(rangeStd, minimalRange, maximalRange,
+                             rxPowerRejectionThreshold, initiatorsPositions,
+                             respondersPositions),
+      positionEstimator_(initiatorsPositions) {
   assert(respondersPositions.size() == 1);
-  ranges2D_ = TrilaterationRangeBuffer(respondersPositions.size(), initiatorsPositions.size());
+  ranges2D_ = TrilaterationRangeBuffer(respondersPositions.size(),
+                                       initiatorsPositions.size());
 }
 
 //-----------------------------------------------------------------------------
-bool R2HLocalisationRTLSPlugin::computeLeaderPosition(ObservationPosition & leader_position)
-{
+bool R2HLocalisationRTLSPlugin::computeLeaderPosition(
+    ObservationPosition& leader_position) {
   if (estimateLeaderPosition_()) {
     leader_position.firstMoment = positionEstimator_.getEstimate();
     leader_position.secondMoment = positionEstimator_.getEstimateCovariance();
@@ -62,28 +54,24 @@ bool R2HLocalisationRTLSPlugin::computeLeaderPosition(ObservationPosition & lead
 }
 
 //-----------------------------------------------------------------------------
-bool R2HLocalisationRTLSPlugin::estimateLeaderPosition_()
-{
-  return positionEstimator_.init(ranges2D_.get(0)) && positionEstimator_.estimate(
-    MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, rangeStd_);
+bool R2HLocalisationRTLSPlugin::estimateLeaderPosition_() {
+  return positionEstimator_.init(ranges2D_.get(0)) &&
+         positionEstimator_.estimate(
+             MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, rangeStd_);
 }
 
 //-----------------------------------------------------------------------------
-void R2HLocalisationRTLSPlugin::storeRange2D(
-  const size_t & initiatorIndex,
-  const size_t & responderIndex,
-  const double & value)
-{
-  ranges2D_.set(responderIndex, initiatorIndex, value);
+void R2HLocalisationRTLSPlugin::storeRange2D(const size_t& initiator_index,
+                                             const size_t& responder_index,
+                                             const double& value) {
+  ranges2D_.set(responder_index, initiator_index, value);
 }
 
 //-----------------------------------------------------------------------------
-void R2HLocalisationRTLSPlugin::resetRange2D(
-  const size_t & initiatorIndex,
-  const size_t & responderIndex)
-{
-  ranges2D_.reset(responderIndex, initiatorIndex);
+void R2HLocalisationRTLSPlugin::resetRange2D(const size_t& initiator_index,
+                                             const size_t& responder_index) {
+  ranges2D_.reset(responder_index, initiator_index);
 }
 
-}   // namespace core
-}   // namespace romea
+}  // namespace core
+}  // namespace romea

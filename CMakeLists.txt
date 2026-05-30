@@ -9,7 +9,6 @@ project(
 
 find_package(romea_core_common REQUIRED)
 find_package(romea_core_rtls REQUIRED)
-find_package(romea_core_rtls_transceiver REQUIRED)
 find_package(romea_core_localisation)
 
 add_library(${PROJECT_NAME} SHARED
@@ -34,7 +33,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
   romea_core_rtls::romea_core_rtls
-  romea_core_rtls_transceiver::romea_core_rtls_transceiver
   romea_core_localisation::romea_core_localisation)
 
 include(GNUInstallDirs)
