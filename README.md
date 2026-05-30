@@ -1,45 +1,68 @@
-# romea_core_localisation_rtls #
+# romea_core_localisation_rtls
 
-This project is C++ library that provides a plugin that transforms data from an RTLS transceiver into Gaussian observations (position, pose, range), enabling seamless integration with the localization algorithms in the **romea_core_localisation** library. Additionally, it includes monitoring tools to track RTLS data and generate diagnostic reports, helping to detect and troubleshoot potential issues in real-time.
+## Overview
 
-## **Usage**
+`romea_core_localisation_rtls` is a C++ library that converts RTLS ranging data into localisation observations usable by `romea_core_localisation` filters.
 
-1. create a ROS workspace
-2. cd worskpace
-3. mkdir src
-4. wget https://raw.githubusercontent.com/Romea/romea-core-localisation-rtls/refs/heads/main/romea_localisation_rtls_public.repos
-5. vcs import src < romea_localisation_rtls_public.repos
-6. build packages
-   - catkin build for ROS1
-   - colcon build for ROS2
-7. create your application using this library
+The package is framework-independent C++ code. Middleware-specific nodes and message conversions are intentionally kept outside this library.
 
-## **Contributing**
+---
 
-If you'd like to contribute to this library, here are some guidelines:
+## Concept
 
-1. Fork the repository.
-2. Create a new branch for your changes.
-3. Make your changes.
-4. Write tests to cover your changes.
-5. Run the tests to ensure they pass.
-6. Commit your changes.
-7. Push your changes to your forked repository.
-8. Submit a pull request.
+The RTLS localisation plugin receives ranging results between initiator and responder transceivers. It validates each range, stores usable 2D ranges and can derive range, pose or position observations depending on the localisation problem.
 
-## **License**
+| Localisation mode | Class | Produced observations |
+| ----------------- | ----- | --------------------- |
+| Common range processing | `LocalisationRTLSPlugin` | `ObservationRange` |
+| Robot-to-world | `R2WLocalisationRTLSPlugin` | `ObservationRange`, `ObservationPose` |
+| Robot-to-robot | `R2RLocalisationRTLSPlugin` | `ObservationRange`, leader `ObservationPose` |
+| Robot-to-human | `R2HLocalisationRTLSPlugin` | `ObservationRange`, leader/human `ObservationPosition` |
 
-This project is released under the Apache License 2.0. See the LICENSE file for details.
+---
 
-## **Authors**
+## Range processing
 
-The romea_core_localisation_rtls library, written by **Jean Laneurit**, was developed during ANR Baudet Rob 2 and ANR ADAP2E projects. Several individuals contributed scientifically to the development of this library:
+`LocalisationRTLSPlugin` handles the common part of RTLS localisation:
 
-**Jean Laneurit**  
-**Christophe Debain**  
-**Roland Chapuis**  
-**Romuald Aufrere**  
+* validation of ranging status;
+* rejection of ranges outside the configured interval;
+* rejection based on received power;
+* conversion from raw 3D transceiver geometry to a usable 2D range;
+* creation of `ObservationRange` with the configured range standard deviation.
 
-## **Contact**
+The plugin stores ranges in a `TrilaterationDataBuffer`, which is then used by the specialised robot-to-world, robot-to-robot or robot-to-human plugins.
 
-If you have any questions or comments about romea_core_localisation_rtls library, please contact **[Jean Laneurit](mailto:jean.laneurit@inrae.fr)**.
+---
+
+## Pose and position estimation
+
+The specialised plugins estimate higher-level observations from the stored ranges:
+
+| Class | Estimator | Output |
+| ----- | --------- | ------ |
+| `R2WLocalisationRTLSPlugin` | `RTLSPose2DEstimator` | Robot pose in the world frame. |
+| `R2RLocalisationRTLSPlugin` | `RTLSPose2DEstimator` | Leader pose in the follower frame. |
+| `R2HLocalisationRTLSPlugin` | `RTLSPosition2DEstimator` | Human or leader position in the robot frame. |
+
+For robot-to-world localisation, responders can be selected with `selectRespondersRanges()` to control which infrastructure anchors are used for pose estimation.
+
+---
+
+## Related packages
+
+| Package | Role |
+| ------- | ---- |
+| `romea_core_rtls` | Trilateration and RTLS coordination algorithms. |
+| `romea_core_rtls_transceiver` | RTLS ranging result and status data structures. |
+| `romea_core_localisation` | Core localisation observations and filters. |
+
+---
+
+## License
+
+This project is released under the Apache License 2.0. See the `LICENSE` file for details.
+
+## Authors
+
+This library was developed by **Jean Laneurit** with scientific contributions from **Christophe Debain**, **Roland Chapuis** and **Romuald Aufrere**, in the context of the Baudet Rob 2 and Adap2E ANR projects.
