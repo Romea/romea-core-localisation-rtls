@@ -1,4 +1,5 @@
-// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Copyright 2022 INRAE, French National Research Institute for Agriculture,
+// Food and Environment
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,72 +18,61 @@
 
 // std
 #include <optional>
-#include <vector>
 #include <string>
+#include <vector>
 
 // romea
 #include "romea_core_common/containers/Eigen/VectorOfEigenVector.hpp"
-#include "romea_core_rtls_transceiver/RTLSTransceiverRangingResult.hpp"
-#include "romea_core_rtls_transceiver/RTLSTransceiverRangingStatus.hpp"
-#include "romea_core_localisation_rtls/trilateration_data_buffer.hpp"
 #include "romea_core_localisation/observation_range.hpp"
+#include "romea_core_localisation_rtls/trilateration_data_buffer.hpp"
+#include "romea_core_rtls/ranging/result.hpp"
+#include "romea_core_rtls/ranging/status.hpp"
 
-namespace romea
-{
-namespace core
-{
-namespace localisation
-{
+namespace romea {
+namespace core {
+namespace localisation {
 
-class RTLSPluginBase
-{
-public:
-  using RangingResult = RTLSTransceiverRangingResult;
-  using RangingStatus = RTLSTransceiverRangingStatus;
-  using RangingStatusEvaluator = RTLSTransceiverRangingStatusEvaluator;
+class RTLSPluginBase {
+ public:
+  using RangingResult = RTLSRangingResult;
+  using RangingStatus = RTLSRangingStatus;
+  using RangingStatusEvaluator = RTLSRangingStatusEvaluator;
 
   using Range = std::optional<double>;
   using RangeVector = std::vector<Range>;
   using RangeArray = std::vector<RangeVector>;
 
-public:
+ public:
   RTLSPluginBase(
-    const double & rangeStd,
-    const double & minimalRange,
-    const double & maximalRange,
-    const uint8_t & rxPowerRejectionThreshold,
-    const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
-    const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions);
+      const double& rangeStd, const double& minimalRange,
+      const double& maximal_range, const uint8_t& rxPowerRejectionThreshold,
+      const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
+      const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions);
 
   virtual ~RTLSPluginBase() = default;
 
-  bool process_ranging_result(
-    const size_t & initiatorIndex,
-    const size_t & responderIndex,
-    const RangingResult & rangingResult,
-    ObservationRange & observation);
+  bool process_ranging_result(const size_t& initiatorIndex,
+                              const size_t& responderIndex,
+                              const RangingResult& rangingResult,
+                              ObservationRange& observation);
 
-protected:
-  virtual void store_range2d(
-    const size_t & initiatorIndex,
-    const size_t & responderIndex,
-    const double & value) = 0;
+ protected:
+  virtual void store_range2d(const size_t& initiatorIndex,
+                             const size_t& responderIndex,
+                             const double& value) = 0;
 
-  virtual void reset_range2d(
-    const size_t & initiatorIndex,
-    const size_t & responderIndex) = 0;
+  virtual void reset_range2d(const size_t& initiatorIndex,
+                             const size_t& responderIndex) = 0;
 
-  virtual double compute_range2d_(
-    const size_t & initiatorIndex,
-    const size_t & responderIndex,
-    const RangingResult & rangingResult);
+  virtual double compute_range2d_(const size_t& initiatorIndex,
+                                  const size_t& responderIndex,
+                                  const RangingResult& rangingResult);
 
-  ObservationRange make_range_observation_(
-    const size_t & initiatorIndex,
-    const size_t & responderIndex,
-    const RangingResult & rangingResult);
+  ObservationRange make_range_observation_(const size_t& initiatorIndex,
+                                           const size_t& responderIndex,
+                                           const RangingResult& rangingResult);
 
-protected:
+ protected:
   double range_std_;
   TrilaterationRangeBuffer ranges2d_;
   RangingStatusEvaluator ranging_status_;
