@@ -1,4 +1,5 @@
-// Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+// Copyright 2022 INRAE, French National Research Institute for Agriculture,
+// Food and Environment
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,46 +15,36 @@
 
 // std
 #include <optional>
-#include <vector>
 #include <string>
+#include <vector>
 
 // romea
 #include "romea_core_localisation_rtls/robot_to_world_rtls_plugin.hpp"
 
 const double MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE = 20;
 
-namespace romea
-{
-namespace core
-{
-namespace localisation
-{
+namespace romea {
+namespace core {
+namespace localisation {
 
 //-----------------------------------------------------------------------------
 R2WRTLSPlugin::R2WRTLSPlugin(
-  const double & rangeStd,
-  const double & minimalRange,
-  const double & maximalRange,
-  const uint8_t & rxPowerRejectionThreshold,
-  const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
-  const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
-: RTLSPluginBase(
-    rangeStd,
-    minimalRange,
-    maximalRange,
-    rxPowerRejectionThreshold,
-    initiatorsPositions,
-    respondersPositions),
-  reachable_responders_(respondersPositions, maximalRange),
-  pose_estimator_(initiatorsPositions, respondersPositions)
-{
-  ranges2d_ = TrilaterationRangeBuffer(initiatorsPositions.size(), respondersPositions.size());
+    const double& rangeStd, const double& minimalRange,
+    const double& maximal_range, const uint8_t& rxPowerRejectionThreshold,
+    const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
+    const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions)
+    : RTLSPluginBase(rangeStd, minimalRange, maximal_range,
+                     rxPowerRejectionThreshold, initiatorsPositions,
+                     respondersPositions),
+      reachable_responders_(respondersPositions, maximal_range),
+      pose_estimator_(initiatorsPositions, respondersPositions) {
+  ranges2d_ = TrilaterationRangeBuffer(initiatorsPositions.size(),
+                                       respondersPositions.size());
 }
 
 //-----------------------------------------------------------------------------
 void R2WRTLSPlugin::select_responders_ranges(
-  const std::vector<size_t> & respondersIndexes)
-{
+    const std::vector<size_t>& respondersIndexes) {
   for (size_t j = 0; j < responders_positions_.size(); ++j) {
     auto it = std::find(respondersIndexes.begin(), respondersIndexes.end(), j);
     if (it == respondersIndexes.end()) {
@@ -65,11 +56,10 @@ void R2WRTLSPlugin::select_responders_ranges(
 }
 
 //-----------------------------------------------------------------------------
-bool R2WRTLSPlugin::compute_pose(ObservationPose & pose_observation)
-{
+bool R2WRTLSPlugin::compute_pose(ObservationPose& pose_observation) {
   if (estimate_pose_()) {
-    pose_observation.firstMoment = pose_estimator_.getEstimate();
-    pose_observation.secondMoment = pose_estimator_.getEstimateCovariance();
+    pose_observation.first_moment = pose_estimator_.getEstimate();
+    pose_observation.second_moment = pose_estimator_.getEstimateCovariance();
     return true;
   } else {
     return false;
@@ -77,8 +67,7 @@ bool R2WRTLSPlugin::compute_pose(ObservationPose & pose_observation)
 }
 
 //-----------------------------------------------------------------------------
-bool R2WRTLSPlugin::estimate_pose_()
-{
+bool R2WRTLSPlugin::estimate_pose_() {
   // std::cout << " i" << std::endl;
   // for (const auto & i :initiatorsPositions_) {
   //   std::cout << i.transpose() << std::endl;
@@ -90,27 +79,24 @@ bool R2WRTLSPlugin::estimate_pose_()
   // }
 
   // std::cout << ranges2D_ << std::endl;
-  return pose_estimator_.init(ranges2d_.data()) && pose_estimator_.estimate(
-    MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, range_std_);
+  return pose_estimator_.init(ranges2d_.data()) &&
+         pose_estimator_.estimate(MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE,
+                                  range_std_);
 }
 
 //-----------------------------------------------------------------------------
-void R2WRTLSPlugin::store_range2d(
-  const size_t & initiatorIndex,
-  const size_t & responderIndex,
-  const double & value)
-{
+void R2WRTLSPlugin::store_range2d(const size_t& initiatorIndex,
+                                  const size_t& responderIndex,
+                                  const double& value) {
   ranges2d_.set(initiatorIndex, responderIndex, value);
 }
 
 //-----------------------------------------------------------------------------
-void R2WRTLSPlugin::reset_range2d(
-  const size_t & initiatorIndex,
-  const size_t & responderIndex)
-{
+void R2WRTLSPlugin::reset_range2d(const size_t& initiatorIndex,
+                                  const size_t& responderIndex) {
   ranges2d_.reset(initiatorIndex, responderIndex);
 }
 
-}   // namespace localisation
-}   // namespace core
-}   // namespace romea
+}  // namespace localisation
+}  // namespace core
+}  // namespace romea
