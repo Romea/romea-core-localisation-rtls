@@ -26,7 +26,8 @@
 #include "romea_core_localisation_rtls/rtls_localisation_simple_trilateration.hpp"
 
 //-----------------------------------------------------------------------------
-TEST(TestRtlsPoseEstimator, testRtlsPoseEstimator) {
+TEST(TestRtlsPoseEstimator, testRtlsPoseEstimator)
+{
   std::vector<int> tagIds{0, 1, 2};
   std::vector<int> anchorIds{0, 1, 2};
 
@@ -46,8 +47,7 @@ TEST(TestRtlsPoseEstimator, testRtlsPoseEstimator) {
   for (size_t i = 0; i < anchorIds.size(); ++i) {
     ranges[i].reserve(tagIds.size());
     for (size_t j = 0; j < tagIds.size(); ++j) {
-      ranges[i].emplace_back(tagIds[j], tag_positions[j], anchorIds[i],
-                             anchor_positions[i], 0.0);
+      ranges[i].emplace_back(tagIds[j], tag_positions[j], anchorIds[i], anchor_positions[i], 0.0);
     }
   }
 
@@ -58,16 +58,18 @@ TEST(TestRtlsPoseEstimator, testRtlsPoseEstimator) {
   double theta = 0;
   double course = -M_PI;
   for (; theta < 2 * M_PI; theta += M_PI / 4, course += M_PI / 3) {
-    Eigen::Matrix3d R = romea::eulerAnglesToRotation3D(
-        Eigen::Vector3d(0, 0, romea::between0And2Pi(course)));
+    Eigen::Matrix3d R =
+      romea::eulerAnglesToRotation3D(Eigen::Vector3d(0, 0, romea::between0And2Pi(course)));
     Eigen::Vector3d T(rho * std::cos(theta), rho * std::cos(theta), 0);
 
     double t = 10.000;
     for (size_t i = 0; i < anchorIds.size(); i++) {
       for (size_t j = 0; j < tagIds.size(); j++) {
         ranges[i][j].set(
-            {romea::durationFromSecond(t),
-             ((R * anchor_positions[i] + T) - tag_positions[j]).norm(), 0, 0});
+          {romea::durationFromSecond(t),
+           ((R * anchor_positions[i] + T) - tag_positions[j]).norm(),
+           0,
+           0});
 
         t += 0.050;
       }
@@ -77,13 +79,13 @@ TEST(TestRtlsPoseEstimator, testRtlsPoseEstimator) {
     EXPECT_TRUE(estimator.estimate(10, 0.02));
     EXPECT_NEAR(T[0], estimator.getEstimate()[0], 0.01);
     EXPECT_NEAR(T[1], estimator.getEstimate()[1], 0.01);
-    EXPECT_NEAR(romea::betweenMinusPiAndPi(course - estimator.getEstimate()[2]),
-                0.0, 0.01);
+    EXPECT_NEAR(romea::betweenMinusPiAndPi(course - estimator.getEstimate()[2]), 0.0, 0.01);
   }
 }
 
 //-----------------------------------------------------------------------------
-int main(int argc, char** argv) {
+int main(int argc, char ** argv)
+{
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

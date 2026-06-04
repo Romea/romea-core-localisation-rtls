@@ -23,31 +23,39 @@
 
 const double MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE = 20;
 
-namespace romea {
-namespace core {
-namespace localisation {
+namespace romea
+{
+namespace core
+{
+namespace localisation
+{
 
 //-----------------------------------------------------------------------------
 R2RRTLSPlugin::R2RRTLSPlugin(
-    const double& rangeStd, const double& minimalRange,
-    const double& maximal_range, const uint8_t& rxPowerRejectionThreshold,
-    const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
-    const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions)
-    : RTLSPluginBase(rangeStd, minimalRange, maximal_range,
-                     rxPowerRejectionThreshold, initiatorsPositions,
-                     respondersPositions),
-      pose_estimator_(respondersPositions, initiatorsPositions) {
-  ranges2d_ = TrilaterationRangeBuffer(respondersPositions.size(),
-                                       initiatorsPositions.size());
+  const double & rangeStd,
+  const double & minimalRange,
+  const double & maximal_range,
+  const uint8_t & rxPowerRejectionThreshold,
+  const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
+  const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
+: RTLSPluginBase(
+    rangeStd,
+    minimalRange,
+    maximal_range,
+    rxPowerRejectionThreshold,
+    initiatorsPositions,
+    respondersPositions),
+  pose_estimator_(respondersPositions, initiatorsPositions)
+{
+  ranges2d_ = TrilaterationRangeBuffer(respondersPositions.size(), initiatorsPositions.size());
 }
 
 //-----------------------------------------------------------------------------
-bool R2RRTLSPlugin::compute_leader_pose(
-    ObservationPose& leaderPoseObservation) {
+bool R2RRTLSPlugin::compute_leader_pose(ObservationPose & leaderPoseObservation)
+{
   if (estimate_leader_pose_()) {
     leaderPoseObservation.first_moment = pose_estimator_.getEstimate();
-    leaderPoseObservation.second_moment =
-        pose_estimator_.getEstimateCovariance();
+    leaderPoseObservation.second_moment = pose_estimator_.getEstimateCovariance();
     return true;
   } else {
     return false;
@@ -55,22 +63,22 @@ bool R2RRTLSPlugin::compute_leader_pose(
 }
 
 //-----------------------------------------------------------------------------
-bool R2RRTLSPlugin::estimate_leader_pose_() {
+bool R2RRTLSPlugin::estimate_leader_pose_()
+{
   return pose_estimator_.init(ranges2d_.data()) &&
-         pose_estimator_.estimate(MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE,
-                                  range_std_);
+         pose_estimator_.estimate(MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, range_std_);
 }
 
 //-----------------------------------------------------------------------------
-void R2RRTLSPlugin::store_range2d(const size_t& initiatorIndex,
-                                  const size_t& responderIndex,
-                                  const double& value) {
+void R2RRTLSPlugin::store_range2d(
+  const size_t & initiatorIndex, const size_t & responderIndex, const double & value)
+{
   ranges2d_.set(responderIndex, initiatorIndex, value);
 }
 
 //-----------------------------------------------------------------------------
-void R2RRTLSPlugin::reset_range2d(const size_t& initiatorIndex,
-                                  const size_t& responderIndex) {
+void R2RRTLSPlugin::reset_range2d(const size_t & initiatorIndex, const size_t & responderIndex)
+{
   ranges2d_.reset(responderIndex, initiatorIndex);
 }
 

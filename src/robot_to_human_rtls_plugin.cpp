@@ -23,28 +23,37 @@
 
 const double MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE = 20;
 
-namespace romea {
-namespace core {
-namespace localisation {
+namespace romea
+{
+namespace core
+{
+namespace localisation
+{
 
 //-----------------------------------------------------------------------------
 R2HRTLSPlugin::R2HRTLSPlugin(
-    const double& rangeStd, const double& minimalRange,
-    const double& maximal_range, const uint8_t& rxPowerRejectionThreshold,
-    const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
-    const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions)
-    : RTLSPluginBase(rangeStd, minimalRange, maximal_range,
-                     rxPowerRejectionThreshold, initiatorsPositions,
-                     respondersPositions),
-      position_estimator_(initiatorsPositions) {
+  const double & rangeStd,
+  const double & minimalRange,
+  const double & maximal_range,
+  const uint8_t & rxPowerRejectionThreshold,
+  const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
+  const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions)
+: RTLSPluginBase(
+    rangeStd,
+    minimalRange,
+    maximal_range,
+    rxPowerRejectionThreshold,
+    initiatorsPositions,
+    respondersPositions),
+  position_estimator_(initiatorsPositions)
+{
   assert(respondersPositions.size() == 1);
-  ranges2d_ = TrilaterationRangeBuffer(respondersPositions.size(),
-                                       initiatorsPositions.size());
+  ranges2d_ = TrilaterationRangeBuffer(respondersPositions.size(), initiatorsPositions.size());
 }
 
 //-----------------------------------------------------------------------------
-bool R2HRTLSPlugin::compute_leader_position(
-    ObservationPosition& leader_position) {
+bool R2HRTLSPlugin::compute_leader_position(ObservationPosition & leader_position)
+{
   if (estimate_leader_position_()) {
     leader_position.first_moment = position_estimator_.getEstimate();
     leader_position.second_moment = position_estimator_.getEstimateCovariance();
@@ -55,22 +64,22 @@ bool R2HRTLSPlugin::compute_leader_position(
 }
 
 //-----------------------------------------------------------------------------
-bool R2HRTLSPlugin::estimate_leader_position_() {
+bool R2HRTLSPlugin::estimate_leader_position_()
+{
   return position_estimator_.init(ranges2d_.get(0)) &&
-         position_estimator_.estimate(
-             MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, range_std_);
+         position_estimator_.estimate(MAXIMAL_NUMBER_OF_ITERATIONS_TO_ESTIMATE_POSE, range_std_);
 }
 
 //-----------------------------------------------------------------------------
-void R2HRTLSPlugin::store_range2d(const size_t& initiatorIndex,
-                                  const size_t& responderIndex,
-                                  const double& value) {
+void R2HRTLSPlugin::store_range2d(
+  const size_t & initiatorIndex, const size_t & responderIndex, const double & value)
+{
   ranges2d_.set(responderIndex, initiatorIndex, value);
 }
 
 //-----------------------------------------------------------------------------
-void R2HRTLSPlugin::reset_range2d(const size_t& initiatorIndex,
-                                  const size_t& responderIndex) {
+void R2HRTLSPlugin::reset_range2d(const size_t & initiatorIndex, const size_t & responderIndex)
+{
   ranges2d_.reset(responderIndex, initiatorIndex);
 }
 
