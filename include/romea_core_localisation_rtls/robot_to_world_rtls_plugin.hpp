@@ -28,34 +28,39 @@
 #include "romea_core_rtls/scheduling/nearby_transceiver_finder.hpp"
 #include "romea_core_rtls/trilateration/pose2D_estimator.hpp"
 
-namespace romea {
-namespace core {
-namespace localisation {
+namespace romea
+{
+namespace core
+{
+namespace localisation
+{
 
-class R2WRTLSPlugin : public RTLSPluginBase {
- public:
+class R2WRTLSPlugin : public RTLSPluginBase
+{
+public:
   R2WRTLSPlugin(
-      const double& rangeStd, const double& minimalRange,
-      const double& maximal_range, const uint8_t& rxPowerRejectionThreshold,
-      const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
-      const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions);
+    const double & rangeStd,
+    const double & minimalRange,
+    const double & maximal_range,
+    const uint8_t & rxPowerRejectionThreshold,
+    const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
+    const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions);
 
   virtual ~R2WRTLSPlugin() = default;
 
-  void select_responders_ranges(const std::vector<size_t>& respondersIndexes);
+  void select_responders_ranges(const std::vector<size_t> & respondersIndexes);
 
-  bool compute_pose(ObservationPose& pose_observation);
+  bool compute_pose(ObservationPose & pose_observation);
 
- private:
-  void store_range2d(const size_t& initiatorIndex, const size_t& responderIndex,
-                     const double& value) override;
+private:
+  void store_range2d(
+    const size_t & initiatorIndex, const size_t & responderIndex, const double & value) override;
 
-  void reset_range2d(const size_t& initiatorIndex,
-                     const size_t& responderIndex) override;
+  void reset_range2d(const size_t & initiatorIndex, const size_t & responderIndex) override;
 
   bool estimate_pose_();
 
- private:
+private:
   RTLSNearbyTransceiverFinder reachable_responders_;
   RTLSPose2DEstimator pose_estimator_;
 };

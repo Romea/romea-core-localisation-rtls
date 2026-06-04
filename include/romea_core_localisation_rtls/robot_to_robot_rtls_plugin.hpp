@@ -26,32 +26,37 @@
 #include "romea_core_localisation_rtls/rtls_plugin_base.hpp"
 #include "romea_core_rtls/trilateration/pose2D_estimator.hpp"
 
-namespace romea {
-namespace core {
-namespace localisation {
+namespace romea
+{
+namespace core
+{
+namespace localisation
+{
 
-class R2RRTLSPlugin : public RTLSPluginBase {
- public:
+class R2RRTLSPlugin : public RTLSPluginBase
+{
+public:
   R2RRTLSPlugin(
-      const double& rangeStd, const double& minimalRange,
-      const double& maximal_range, const uint8_t& rxPowerRejectionThreshold,
-      const VectorOfEigenVector<Eigen::Vector3d>& initiatorsPositions,
-      const VectorOfEigenVector<Eigen::Vector3d>& respondersPositions);
+    const double & rangeStd,
+    const double & minimalRange,
+    const double & maximal_range,
+    const uint8_t & rxPowerRejectionThreshold,
+    const VectorOfEigenVector<Eigen::Vector3d> & initiatorsPositions,
+    const VectorOfEigenVector<Eigen::Vector3d> & respondersPositions);
 
   virtual ~R2RRTLSPlugin() = default;
 
-  bool compute_leader_pose(ObservationPose& leaserPose);
+  bool compute_leader_pose(ObservationPose & leaserPose);
 
- private:
-  void store_range2d(const size_t& initiatorIndex, const size_t& responderIndex,
-                     const double& value) override;
+private:
+  void store_range2d(
+    const size_t & initiatorIndex, const size_t & responderIndex, const double & value) override;
 
-  void reset_range2d(const size_t& initiatorIndex,
-                     const size_t& responderIndex) override;
+  void reset_range2d(const size_t & initiatorIndex, const size_t & responderIndex) override;
 
   bool estimate_leader_pose_();
 
- private:
+private:
   RTLSPose2DEstimator pose_estimator_;
 };
 

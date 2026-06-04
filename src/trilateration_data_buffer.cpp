@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // std
 #include <optional>
-#include <vector>
 #include <ostream>
+#include <vector>
 
 // romea
 #include "romea_core_localisation_rtls/trilateration_data_buffer.hpp"
@@ -29,47 +28,39 @@ namespace localisation
 {
 
 //-----------------------------------------------------------------------------
-TrilaterationRangeBuffer::TrilaterationRangeBuffer()
-: ranges_()
+TrilaterationRangeBuffer::TrilaterationRangeBuffer() : ranges_()
 {
 }
 
 //-----------------------------------------------------------------------------
-TrilaterationRangeBuffer::TrilaterationRangeBuffer(
-  const size_t rows,
-  const size_t cols)
+TrilaterationRangeBuffer::TrilaterationRangeBuffer(const size_t rows, const size_t cols)
 : ranges_(rows, RangeVector(cols, Range()))
 {
 }
 
 //-----------------------------------------------------------------------------
 void TrilaterationRangeBuffer::TrilaterationRangeBuffer::set(
-  const size_t & row,
-  const size_t & col,
-  const double & value)
+  const size_t & row, const size_t & col, const double & value)
 {
   ranges_[row][col] = value;
 }
 
 //-----------------------------------------------------------------------------
 const TrilaterationRangeBuffer::Range & TrilaterationRangeBuffer::get(
-  const size_t & row,
-  const size_t & col) const
+  const size_t & row, const size_t & col) const
 {
   return ranges_[row][col];
 }
 
 //-----------------------------------------------------------------------------
-const TrilaterationRangeBuffer::RangeVector & TrilaterationRangeBuffer::get(const size_t & row)
-const
+const TrilaterationRangeBuffer::RangeVector & TrilaterationRangeBuffer::get(
+  const size_t & row) const
 {
   return ranges_[row];
 }
 
 //-----------------------------------------------------------------------------
-void TrilaterationRangeBuffer::reset(
-  const size_t & row,
-  const size_t & col)
+void TrilaterationRangeBuffer::reset(const size_t & row, const size_t & col)
 {
   ranges_[row][col].reset();
 }

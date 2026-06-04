@@ -16,9 +16,9 @@
 #define ROMEA_CORE_LOCALISATION_RTLS__TRILATERATION_DATA_BUFFER_HPP_
 
 // std
+#include <iostream>
 #include <optional>
 #include <vector>
-#include <iostream>
 
 namespace romea
 {
@@ -36,34 +36,23 @@ public:
 
   TrilaterationRangeBuffer();
 
-  TrilaterationRangeBuffer(
-    const size_t rows,
-    const size_t cols);
+  TrilaterationRangeBuffer(const size_t rows, const size_t cols);
 
-  void resize(
-    const size_t rows,
-    const size_t cols);
+  void resize(const size_t rows, const size_t cols);
 
-  void set(
-    const size_t & row,
-    const size_t & col,
-    const double & value);
+  void set(const size_t & row, const size_t & col, const double & value);
 
-  const Range & get(
-    const size_t & row,
-    const size_t & col)const;
+  const Range & get(const size_t & row, const size_t & col) const;
 
-  const RangeVector & get(const size_t & row)const;
+  const RangeVector & get(const size_t & row) const;
 
-  void reset(
-    const size_t & row,
-    const size_t & col);
+  void reset(const size_t & row, const size_t & col);
 
   void reset(const size_t & row);
 
   void reset();
 
-  const RangeArray & data()const;
+  const RangeArray & data() const;
 
 private:
   RangeArray ranges_;
