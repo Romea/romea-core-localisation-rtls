@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>romea_core_localisation_rtls</name>
-  <version>0.0.0</version>
+  <version>1.0.0</version>
   <description>The romea core localisation library </description>
   <author email="jean.laneurit@inrae.fr">Jean Laneurit</author>
   <maintainer email="jean.laneurit@inrae.fr">Jean Laneurit</maintainer>
@@ -13,6 +13,5 @@
   </export>
   <depend>romea_core_common</depend>
   <depend>romea_core_rtls</depend>
-  <depend>romea_core_rtls_transceiver</depend>
   <depend>romea_core_localisation</depend>
 </package>
