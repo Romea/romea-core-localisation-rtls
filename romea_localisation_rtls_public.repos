@@ -5,9 +5,6 @@ repositories:
     romea_core/romea_rtls:
         type: git
         url: https://github.com/Romea/romea-core-rtls.git
-    romea_core/romea_rtls_transceiver:
-        type: git
-        url: https://github.com/Romea/romea-core-rtls-transceiver.git
     romea_core/romea_filtering:
         type: git
         url: https://github.com/Romea/romea-core-filtering.git
